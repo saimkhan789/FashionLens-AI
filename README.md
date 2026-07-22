@@ -177,11 +177,6 @@ venv\Scripts\python scripts/evaluate_model.py
 | GET | `/metrics` | Model evaluation metrics |
 | GET | `/health` | Health check |
 
----
-
-## Screenshots
-
-> Add your own screenshots here
 
 ---
 
