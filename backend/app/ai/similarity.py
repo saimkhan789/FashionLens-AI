@@ -1,3 +1,17 @@
+from PIL import Image
+
+
+def load_resources():
+    print("[SIMILARITY] Skipped — using MongoDB search")
+
+
+def search_by_image(image: Image.Image, top_k: int = 10) -> list:
+    return []
+
+
+def search_by_text(query: str, top_k: int = 10) -> list:
+    return []
+
 # import os
 
 # import faiss
@@ -60,17 +74,3 @@
 #         if idx != -1
 # ]
 
-
-from PIL import Image
-
-
-def load_resources():
-    print("[SIMILARITY] Skipped — using MongoDB search")
-
-
-def search_by_image(image: Image.Image, top_k: int = 10) -> list:
-    return []
-
-
-def search_by_text(query: str, top_k: int = 10) -> list:
-    return []
