@@ -1,5 +1,5 @@
 # import os
-# import numpy as np
+
 # import faiss
 # import torch
 # from PIL import Image
