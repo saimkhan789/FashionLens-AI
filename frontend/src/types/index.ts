@@ -1,5 +1,5 @@
 export interface SearchResult {
-  product_id: number;
+  product_id: string;
   score: number;
   display_name: string;
   article_type: string;
@@ -8,6 +8,11 @@ export interface SearchResult {
   master_category: string;
   sub_category: string;
   image_path: string;
+  source?: string;
+  brand?: string;
+  price?: string;
+  product_url?: string;
+  image_url?: string;
 }
 
 export interface HistoryEntry {
