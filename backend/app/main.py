@@ -31,7 +31,8 @@ app.add_middleware(
 )
 
 IMAGES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "datasets", "raw", "images"))
-app.mount("/images", StaticFiles(directory=IMAGES_DIR), name="images")
+if os.path.exists(IMAGES_DIR):
+    app.mount("/images", StaticFiles(directory=IMAGES_DIR), name="images")
 
 app.include_router(auth_router)
 app.include_router(search_router)
