@@ -8,14 +8,14 @@ from app.api.search import router as search_router
 from app.api.history import router as history_router
 from app.api.favorites import router as favorites_router
 from app.api.metrics import router as metrics_router
-from app.ai.similarity import load_resources
+#from app.ai.similarity import load_resources
 import os
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await connect_db()
-    load_resources()
+    # load_resources()
     yield
     await disconnect_db()
 
@@ -24,7 +24,7 @@ app = FastAPI(title="FashionLens AI", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "https://your-app.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
