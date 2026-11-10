@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FashionLens, Umwelt palette</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#16302e;text-decoration:none}a:hover{color:#317873}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #ffffff; color: #16302e; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; line-height: 1.6">
+
+  <header style="position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,0.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid #e3eef6">
+    <nav style="max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+      <a href="#" style="display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; letter-spacing: -0.02em">
+        <span style="width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #3AB09E, #317873); box-shadow: 0 8px 18px -8px rgba(49,120,115,0.8); display: grid; place-items: center">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="m19 19-3.5-3.5"></path></svg>
+        </span>
+        FashionLens
+      </a>
+      <div style="display: flex; gap: 6px; padding: 5px; border-radius: 999px; background: #DBE9F4; font-size: 14px; font-weight: 600">
+        <a href="#" style="padding: 7px 16px; border-radius: 999px; background: #ffffff; color: #317873; box-shadow: 0 4px 12px -6px rgba(22,48,46,0.4)">Search</a>
+        <a href="#" style="padding: 7px 16px; border-radius: 999px">Saved</a>
+        <a href="#" style="padding: 7px 16px; border-radius: 999px">History</a>
+      </div>
+      <a href="#" style="padding: 10px 20px; border-radius: 12px; background: #317873; color: #ffffff; font-size: 14px; font-weight: 700; box-shadow: 0 12px 26px -12px rgba(49,120,115,0.9)">Sign in</a>
+    </nav>
+  </header>
+
+  <section style="background: linear-gradient(180deg, #DBE9F4 0%, #ffffff 100%)">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 64px 32px 56px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+      <div style="flex: 1 1 460px; min-width: 0">
+        <span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 8px; border-radius: 999px; background: #ffffff; box-shadow: 0 6px 18px -10px rgba(22,48,46,0.5); font-size: 13px; font-weight: 600">
+          <span style="padding: 2px 8px; border-radius: 999px; background: #3AB09E; color: #10302d; font-size: 11px; font-weight: 700">NEW</span>
+          Search by photo, piece by piece
+        </span>
+        <h1 style="margin: 22px 0 16px; font-size: 58px; line-height: 1.04; font-weight: 800; letter-spacing: -0.035em">Snap it. Find it.<br><span style="color: #317873">Buy it local.</span></h1>
+        <p style="margin: 0 0 30px; max-width: 470px; font-size: 17px; color: #3f5856">Upload any outfit and FashionLens finds each garment in it, then shows you the closest matches from Pakistani brands.</p>
+
+        <form style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px 0 20px; border-radius: 18px; background: #ffffff; border: 1px solid #d4e3ee; box-shadow: 0 26px 50px -24px rgba(22,48,46,0.45)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#5b7270" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <label for="q-u" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Search</label>
+          <input id="q-u" placeholder="Describe it, or paste a link" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: #16302e">
+          <button type="button" aria-label="Search with a photo" style="width: 48px; height: 48px; border: 0; border-radius: 14px; background: #DBE9F4; color: #317873; display: grid; place-items: center; cursor: pointer">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+          </button>
+          <button type="button" style="height: 48px; padding: 0 24px; border: 0; border-radius: 14px; background: #317873; color: #ffffff; font: inherit; font-weight: 700; cursor: pointer">Search</button>
+        </form>
+        <p style="margin: 12px 4px 0; font-size: 13px; color: #5b7270">3 free searches and 1 photo search. Sign in free for unlimited.</p>
+      </div>
+
+      <div style="flex: 1 1 400px; min-width: 0; padding: 18px; border-radius: 28px; background: #ffffff; box-shadow: 0 50px 90px -40px rgba(22,48,46,0.5); border: 1px solid #e3eef6">
+        <div style="display: flex; gap: 16px">
+          <div style="position: relative; flex: 0 0 46%; height: 300px; border-radius: 18px; background: linear-gradient(165deg, #cfe4ef, #6f9fae)">
+            <div style="position: absolute; left: 16%; top: 20%; width: 68%; height: 40%; border: 2px solid #3AB09E; border-radius: 10px; background: rgba(58,176,158,0.12)"></div>
+            <span style="position: absolute; left: 16%; top: calc(20% - 26px); padding: 2px 9px; border-radius: 999px; background: #3AB09E; color: #10302d; font-size: 11px; font-weight: 700">Kurta 94%</span>
+          </div>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+            <p style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5b7270">Top matches</p>
+            <sc-for list="{{matches}}" as="m" hint-placeholder-count="3">
+              <div style="display: flex; gap: 10px; align-items: center; padding: 8px; border-radius: 14px; background: #f4f8fb">
+                <span style="flex: 0 0 52px; height: 64px; border-radius: 10px; background: {{m.tone}}"></span>
+                <span style="min-width: 0">
+                  <span style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #317873">{{m.brand}}</span>
+                  <span style="display: block; font-size: 13px; font-weight: 600">Rs [price]</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 32px 32px 72px">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap">
+      <h2 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em">Trending this week</h2>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #317873; color: #ffffff; font-size: 13px; font-weight: 600">All</a>
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #DBE9F4; font-size: 13px; font-weight: 600">Kurtas</a>
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #DBE9F4; font-size: 13px; font-weight: 600">Lawn</a>
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #DBE9F4; font-size: 13px; font-weight: 600">Formals</a>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px 20px">
+      <sc-for list="{{products}}" as="p" hint-placeholder-count="4">
+        <article style="position: relative">
+          <div style="aspect-ratio: 4 / 5; border-radius: 20px; background: {{p.tone}}; box-shadow: 0 24px 40px -26px rgba(22,48,46,0.6)"></div>
+          <button type="button" aria-label="Save" style="position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border: 0; border-radius: 14px; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: grid; place-items: center; cursor: pointer">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#16302e" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"></path></svg>
+          </button>
+          <p style="margin: 12px 0 0; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #317873">{{p.brand}}</p>
+          <p style="margin: 2px 0 0; font-weight: 600">[Product name]</p>
+          <p style="margin: 2px 0 0; font-weight: 700">Rs [price]</p>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tones = ['linear-gradient(165deg, #d8eaf3, #7aa9b8)', 'linear-gradient(165deg, #d6efe9, #3AB09E)', 'linear-gradient(165deg, #e6eef4, #8ea3b5)', 'linear-gradient(165deg, #cfe5df, #317873)'];
+    return {
+      matches: tones.slice(0, 3).map((tone, i) => ({ tone, brand: i === 0 ? 'Limelight' : '[Brand]' })),
+      products: tones.map((tone, i) => ({ tone, brand: i === 1 ? 'Limelight' : '[Brand]' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

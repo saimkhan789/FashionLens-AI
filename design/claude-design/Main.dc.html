@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FashionLens Editorial: Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1a1a1a;text-decoration:none}a:hover{color:#c8502a}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.6">
+
+  <header style="border-bottom: 1px solid #e8e8e4; background: #ffffff">
+    <nav style="max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+      <a href="#" style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 600">FashionLens <span style="color: {{accent}}">AI</span></a>
+      <div style="display: flex; gap: 4px; flex-wrap: wrap">
+        <a href="#" style="padding: 6px 16px; border-radius: 999px; background: #1a1a1a; color: #ffffff; font-size: 14px">Search</a>
+        <a href="#" style="padding: 6px 16px; border-radius: 999px; font-size: 14px; color: #4a4a45">Saved</a>
+        <a href="#" style="padding: 6px 16px; border-radius: 999px; font-size: 14px; color: #4a4a45">History</a>
+      </div>
+      <div style="display: flex; gap: 8px">
+        <a href="#" style="padding: 10px 16px; font-size: 14px">Sign in</a>
+        <a href="#" style="padding: 10px 18px; border-radius: 999px; background: #1a1a1a; color: #ffffff; font-size: 14px">Join free</a>
+      </div>
+    </nav>
+  </header>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 72px 32px 56px; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
+    <div style="flex: 1 1 480px; min-width: 0">
+      <span style="display: inline-block; padding: 6px 14px; border-radius: 999px; background: #fdf0ec; color: #a8401e; font-size: 12px; font-weight: 500; letter-spacing: 0.04em">Seen it on Pinterest? Find it in Pakistan.</span>
+      <h1 style="margin: 24px 0 16px; font-family: 'Playfair Display', Georgia, serif; font-size: 58px; line-height: 1.06; font-weight: 700; letter-spacing: -0.01em">Find the look.<br>Buy it from<br>local brands.</h1>
+      <p style="margin: 0 0 32px; max-width: 460px; color: #6b6b64; font-size: 17px">Upload a photo or describe it. FashionLens spots each piece of the outfit and shows matching products you can buy right now.</p>
+
+      <form style="display: flex; align-items: center; gap: 8px; height: 64px; padding: 0 8px 0 24px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; box-shadow: 0 2px 20px rgba(0,0,0,0.05)">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6b6b64" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <label for="q-a" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Search</label>
+        <input id="q-a" placeholder="Paste a Pinterest link or describe it: black embroidered kurta" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 17px; color: #1a1a1a">
+        <button type="button" aria-label="Search with a photo" style="width: 44px; height: 44px; border: 0; border-radius: 999px; background: transparent; display: grid; place-items: center; cursor: pointer">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#4a4a45" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+        </button>
+        <button type="button" style="height: 48px; padding: 0 28px; border: 0; border-radius: 999px; background: #1a1a1a; color: #ffffff; font: inherit; font-weight: 500; cursor: pointer">Search</button>
+      </form>
+      <p style="margin: 10px 24px 0; font-size: 12px; color: #6b6b64">3 free text searches and 1 photo search left. Sign in for unlimited.</p>
+
+      <div style="display: flex; gap: 40px; margin-top: 40px; flex-wrap: wrap">
+        <div><div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 600">[N]</div><div style="font-size: 12px; color: #6b6b64">Products you can buy</div></div>
+        <div><div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 600">[N]</div><div style="font-size: 12px; color: #6b6b64">Pakistani brands</div></div>
+        <div><div style="font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 600">1 photo</div><div style="font-size: 12px; color: #6b6b64">Every piece detected</div></div>
+      </div>
+    </div>
+
+    <div style="flex: 1 1 420px; min-width: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 200px 200px; gap: 12px">
+      <div style="grid-row: span 2; border-radius: 12px; background: linear-gradient(160deg, #e9d5c8, #c9a58f); display: flex; align-items: flex-end; padding: 12px; font-size: 11px; color: #3d2b20">Outfit photo</div>
+      <div style="border-radius: 12px; background: linear-gradient(160deg, #dfe4dc, #aab6a5)"></div>
+      <div style="border-radius: 12px; background: linear-gradient(160deg, #efe6d6, #d2bf9c)"></div>
+      <div style="border-radius: 12px; background: linear-gradient(160deg, #e5dde6, #b7a5bb)"></div>
+      <div style="border-radius: 12px; background: linear-gradient(160deg, #f1dcd5, #d49c88)"></div>
+    </div>
+  </section>
+
+  <div style="border-top: 1px solid #e8e8e4; border-bottom: 1px solid #e8e8e4; background: #ffffff; padding: 18px 32px; display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6b64">
+    <span>Limelight</span><span>[Brand]</span><span>[Brand]</span><span>[Brand]</span><span>[Brand]</span><span>[Brand]</span>
+  </div>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 64px 32px 80px">
+    <h2 style="margin: 0 0 32px; text-align: center; font-family: 'Playfair Display', Georgia, serif; font-size: 36px; font-weight: 600">How it works</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px">
+      <div style="background: #ffffff; border: 1px solid #e8e8e4; border-radius: 16px; padding: 28px">
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 32px; color: {{accent}}">01</div>
+        <h3 style="margin: 8px 0 6px; font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 600">Show us the look</h3>
+        <p style="margin: 0; font-size: 14px; color: #6b6b64">Upload, paste or drop a photo, share a Pinterest link, or just describe it.</p>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e8e8e4; border-radius: 16px; padding: 28px">
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 32px; color: {{accent}}">02</div>
+        <h3 style="margin: 8px 0 6px; font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 600">We spot every piece</h3>
+        <p style="margin: 0; font-size: 14px; color: #6b6b64">The kurta, the trousers, the dupatta: each one is matched on its own.</p>
+      </div>
+      <div style="background: #ffffff; border: 1px solid #e8e8e4; border-radius: 16px; padding: 28px">
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 32px; color: {{accent}}">03</div>
+        <h3 style="margin: 8px 0 6px; font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 600">Buy from the brand</h3>
+        <p style="margin: 0; font-size: 14px; color: #6b6b64">Every result links straight to the brand's own shop. Nothing is a dead end.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer style="background: #1a1a1a; color: #ffffff; padding: 56px 32px; text-align: center">
+    <h2 style="margin: 0 0 12px; font-family: 'Playfair Display', Georgia, serif; font-size: 34px; font-weight: 600">Ready to find your fit?</h2>
+    <p style="margin: 0 0 24px; color: #c9c9c2">Sign in free for unlimited searches and a place to save what you love.</p>
+    <a href="#" style="display: inline-block; padding: 14px 32px; border-radius: 999px; background: {{accent}}; color: #ffffff; font-weight: 500">Join free</a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#c8502a","options":["#c8502a","#1a1a1a","#7a5c3e"]},"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#c8502a' };
+  }
+}
+</script>
+</body>
+</html>

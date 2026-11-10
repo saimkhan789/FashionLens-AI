@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FashionLens Editorial: Photo search results</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1a1a1a;text-decoration:none}a:hover{color:#c8502a}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.6">
+
+  <header style="border-bottom: 1px solid #e8e8e4; background: #ffffff">
+    <nav style="max-width: 1240px; margin: 0 auto; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+      <a href="#" style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 600">FashionLens <span style="color: {{accent}}">AI</span></a>
+      <div style="display: flex; gap: 4px; flex-wrap: wrap">
+        <a href="#" style="padding: 6px 16px; border-radius: 999px; background: #1a1a1a; color: #ffffff; font-size: 14px">Search</a>
+        <a href="#" style="padding: 6px 16px; border-radius: 999px; font-size: 14px; color: #4a4a45">Saved</a>
+        <a href="#" style="padding: 6px 16px; border-radius: 999px; font-size: 14px; color: #4a4a45">History</a>
+      </div>
+      <a href="#" style="display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border: 1px solid #e8e8e4; border-radius: 999px; font-size: 14px"><span style="width: 28px; height: 28px; border-radius: 999px; background: #fdf0ec; color: #a8401e; display: grid; place-items: center; font-weight: 500">S</span>Saim</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 1240px; margin: 0 auto; padding: 28px 32px 64px">
+    <form style="display: flex; align-items: center; gap: 8px; height: 52px; max-width: 720px; padding: 0 6px 0 20px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#6b6b64" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <label for="q-ar" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Search</label>
+      <input id="q-ar" placeholder="Search again, or drop another photo" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit">
+      <button type="button" aria-label="Search with a photo" style="width: 44px; height: 44px; border: 0; border-radius: 999px; background: transparent; display: grid; place-items: center; cursor: pointer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#4a4a45" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+      </button>
+      <button type="button" style="height: 40px; padding: 0 20px; border: 0; border-radius: 999px; background: #1a1a1a; color: #ffffff; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer">Search</button>
+    </form>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 32px; margin-top: 28px">
+      <aside style="flex: 1 1 280px; max-width: 320px; min-width: 0">
+        <div style="position: relative; aspect-ratio: 3 / 4; border-radius: 16px; overflow: hidden; background: linear-gradient(170deg, #ead8cc, #c39c86)">
+          <div style="position: absolute; left: 22%; top: 18%; width: 56%; height: 40%; border: 2px solid {{accent}}; border-radius: 8px; background: rgba(200, 80, 42, 0.08)"></div>
+          <span style="position: absolute; left: 22%; top: calc(18% - 26px); padding: 2px 8px; border-radius: 6px; background: {{accent}}; color: #ffffff; font-size: 12px; font-weight: 500">Kurta</span>
+          <div style="position: absolute; left: 28%; top: 60%; width: 44%; height: 34%; border: 2px dashed #ffffff; border-radius: 8px"></div>
+          <div style="position: absolute; left: 12%; top: 14%; width: 76%; height: 20%; border: 2px dashed #ffffff; border-radius: 8px"></div>
+          <span style="position: absolute; left: 12px; bottom: 12px; font-size: 11px; color: #3d2b20">Your photo</span>
+        </div>
+        <p style="margin: 18px 0 8px; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6b6b64">We found 3 pieces</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <button type="button" style="padding: 8px 16px; border: 0; border-radius: 999px; background: #1a1a1a; color: #ffffff; font: inherit; font-size: 14px; cursor: pointer">Kurta</button>
+          <button type="button" style="padding: 8px 16px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 14px; cursor: pointer">Trousers</button>
+          <button type="button" style="padding: 8px 16px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 14px; cursor: pointer">Dupatta</button>
+          <button type="button" style="padding: 8px 16px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 14px; cursor: pointer">Full look</button>
+        </div>
+      </aside>
+
+      <section style="flex: 999 1 560px; min-width: 0">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+          <h1 style="margin: 0; font-family: 'Playfair Display', Georgia, serif; font-size: 30px; font-weight: 600">Kurtas like yours</h1>
+          <span style="font-size: 13px; color: #6b6b64">Every result can be bought from the brand</span>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 22px; padding-bottom: 18px; border-bottom: 1px solid #e8e8e4">
+          <button type="button" style="padding: 7px 14px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px; cursor: pointer">Brand ▾</button>
+          <button type="button" style="padding: 7px 14px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px; cursor: pointer">Category ▾</button>
+          <div style="display: flex; border: 1px solid #d6d6d0; border-radius: 999px; overflow: hidden; background: #ffffff">
+            <button type="button" style="padding: 7px 14px; border: 0; background: #1a1a1a; color: #ffffff; font: inherit; font-size: 13px; cursor: pointer">Women</button>
+            <button type="button" style="padding: 7px 14px; border: 0; background: transparent; font: inherit; font-size: 13px; cursor: pointer">Men</button>
+            <button type="button" style="padding: 7px 14px; border: 0; background: transparent; font: inherit; font-size: 13px; cursor: pointer">Kids</button>
+          </div>
+          <button type="button" style="padding: 7px 14px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px; cursor: pointer">Price ▾</button>
+          <button type="button" style="margin-left: auto; padding: 7px 14px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px; cursor: pointer">Sort: Best match ▾</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 28px 20px">
+          <sc-for list="{{products}}" as="p" hint-placeholder-count="8">
+            <article style="position: relative">
+              <a href="#" style="display: block">
+                <div style="aspect-ratio: 3 / 4; border-radius: 12px; background: {{p.tone}}"></div>
+                <p style="margin: 10px 0 0; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6b6b64">{{p.brand}}</p>
+                <h3 style="margin: 2px 0 0; font-size: 14px; font-weight: 400; line-height: 1.35">{{p.title}}</h3>
+                <p style="margin: 4px 0 0; font-size: 14px; font-weight: 500">{{p.price}}</p>
+              </a>
+              <button type="button" aria-label="Save" style="position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border: 0; border-radius: 999px; background: rgba(255,255,255,0.92); display: grid; place-items: center; cursor: pointer">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4a4a45" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"></path></svg>
+              </button>
+              <a href="#" style="display: inline-block; margin-top: 4px; font-size: 12px; color: #6b6b64">More like this</a>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#c8502a","options":["#c8502a","#1a1a1a","#7a5c3e"]},"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tones = [
+      'linear-gradient(160deg, #ecd9cf, #c9a08b)', 'linear-gradient(160deg, #e4e7df, #aeb9a8)',
+      'linear-gradient(160deg, #efe5d4, #cdb791)', 'linear-gradient(160deg, #e6dde7, #b5a3ba)',
+      'linear-gradient(160deg, #f0dad3, #cf9783)', 'linear-gradient(160deg, #dde3ea, #9fafc0)',
+      'linear-gradient(160deg, #ece6dc, #c4b39a)', 'linear-gradient(160deg, #e9dcd8, #bd9a91)'
+    ];
+    const products = tones.map((tone, i) => ({
+      tone,
+      brand: i % 3 === 0 ? 'Limelight' : '[Brand]',
+      title: '[Product name from the brand]',
+      price: 'Rs [price]'
+    }));
+    return { accent: this.props.accent ?? '#c8502a', products };
+  }
+}
+</script>
+</body>
+</html>

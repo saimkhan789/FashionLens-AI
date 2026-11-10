@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FashionLens Lookbook: Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f3ede4;text-decoration:none}a:hover{color:#e8a27f}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #141210; color: #f3ede4; font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.6">
+
+  <section style="position: relative; min-height: 640px; background: radial-gradient(120% 90% at 75% 30%, #6b4433 0%, #3a2820 45%, #141210 100%); overflow: hidden">
+    <div style="position: absolute; right: 8%; top: 90px; width: 34%; height: 470px; border-radius: 200px 200px 24px 24px; background: linear-gradient(170deg, #c9a189, #7d5442); box-shadow: 0 40px 80px -30px rgba(0,0,0,0.7)"></div>
+    <div style="position: absolute; right: calc(8% + 6%); top: 190px; width: 22%; height: 170px; border: 1.5px solid {{accent}}; border-radius: 10px"></div>
+    <span style="position: absolute; right: calc(8% + 6%); top: 160px; padding: 2px 10px; border-radius: 6px; background: {{accent}}; color: #141210; font-size: 12px; font-weight: 500">Kurta, 24 matches</span>
+
+    <header style="position: relative; max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+      <a href="#" style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; letter-spacing: 0.02em">FashionLens</a>
+      <div style="display: flex; gap: 28px; font-size: 14px; color: #c9c1b4; flex-wrap: wrap">
+        <a href="#">Search</a><a href="#" style="color: #c9c1b4">Saved</a><a href="#" style="color: #c9c1b4">History</a>
+      </div>
+      <a href="#" style="padding: 10px 20px; border: 1px solid rgba(243,237,228,0.35); border-radius: 999px; font-size: 14px">Sign in</a>
+    </header>
+
+    <div style="position: relative; max-width: 1200px; margin: 0 auto; padding: 70px 32px 0">
+      <p style="margin: 0; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: {{accent}}">The Pakistani lookbook, searchable</p>
+      <h1 style="margin: 16px 0 18px; max-width: 620px; font-family: 'Cormorant Garamond', serif; font-size: 84px; line-height: 0.98; font-weight: 500">Wear what<br>you <span style="font-style: italic">saw.</span></h1>
+      <p style="margin: 0 0 34px; max-width: 440px; color: #c9c1b4; font-size: 17px">Show us a photo from anywhere. We find each piece and the brands in Pakistan that sell it.</p>
+
+      <form style="max-width: 600px; display: flex; align-items: center; gap: 8px; height: 66px; padding: 0 8px 0 22px; border: 1px solid rgba(243,237,228,0.18); border-radius: 18px; background: rgba(255,255,255,0.08); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6)">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#c9c1b4" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <label for="q-c" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Search</label>
+        <input id="q-c" placeholder="Describe it, or paste a Pinterest link" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: #f3ede4">
+        <button type="button" aria-label="Search with a photo" style="width: 48px; height: 48px; border: 0; border-radius: 12px; background: rgba(255,255,255,0.1); color: #f3ede4; display: grid; place-items: center; cursor: pointer">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+        </button>
+        <button type="button" style="height: 48px; padding: 0 26px; border: 0; border-radius: 12px; background: {{accent}}; color: #141210; font: inherit; font-weight: 500; cursor: pointer">Search</button>
+      </form>
+      <p style="margin: 12px 4px 0; font-size: 13px; color: #a39d93">3 free searches and 1 photo search, then sign in for unlimited.</p>
+    </div>
+  </section>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 64px 32px 24px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap">
+      <h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 500">Shop by piece</h2>
+      <a href="#" style="font-size: 14px; color: #c9c1b4">All categories</a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px">
+      <sc-for list="{{pieces}}" as="c" hint-placeholder-count="5">
+        <a href="#" style="position: relative; display: block; height: 230px; border-radius: 16px; overflow: hidden; background: {{c.tone}}; box-shadow: 0 24px 40px -24px rgba(0,0,0,0.8)">
+          <span style="position: absolute; left: 16px; bottom: 14px; font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: #ffffff">{{c.name}}</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 48px 32px 72px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+    <div style="padding: 26px; border-radius: 16px; background: #1e1b18; border: 1px solid #2c2824">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+      <h3 style="margin: 14px 0 4px; font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600">Any photo</h3>
+      <p style="margin: 0; font-size: 14px; color: #a39d93">Gallery, screenshot or a Pinterest link.</p>
+    </div>
+    <div style="padding: 26px; border-radius: 16px; background: #1e1b18; border: 1px solid #2c2824">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M9 4v16M4 12h16"></path></svg>
+      <h3 style="margin: 14px 0 4px; font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600">Every piece</h3>
+      <p style="margin: 0; font-size: 14px; color: #a39d93">Kurta, trousers and dupatta, matched separately.</p>
+    </div>
+    <div style="padding: 26px; border-radius: 16px; background: #1e1b18; border: 1px solid #2c2824">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="{{accent}}" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>
+      <h3 style="margin: 14px 0 4px; font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600">Buy local</h3>
+      <p style="margin: 0; font-size: 14px; color: #a39d93">Straight to the brand's own shop.</p>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#e08a63","options":["#e08a63","#d4b483","#f3ede4"]},"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const names = ['Kurtas', 'Trousers', 'Dupattas', 'Formals', 'Menswear'];
+    const tones = [
+      'linear-gradient(170deg, #a97a63, #4a2f24)', 'linear-gradient(170deg, #8d8a78, #34322b)',
+      'linear-gradient(170deg, #b39377, #4f3a2b)', 'linear-gradient(170deg, #96707a, #3b2a2f)',
+      'linear-gradient(170deg, #7f8790, #2d3136)'
+    ];
+    return { accent: this.props.accent ?? '#e08a63', pieces: names.map((name, i) => ({ name, tone: tones[i] })) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "EditorialResults.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "title": "A · Editorial (chosen): Photo search results",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "LookbookHome.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "title": "C · Lookbook (dark): Home",
+      "w": 1280,
+      "x": 0,
+      "y": 3300
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "title": "A · Editorial (chosen): Home",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "MinimalHome.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "title": "B · Minimal: Home",
+      "w": 1280,
+      "x": 0,
+      "y": 1600
+    },
+    "MinimalResults.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "title": "B · Minimal: Photo search results",
+      "w": 1280,
+      "x": 1360,
+      "y": 1600
+    },
+    "MobileHome.dc.html": {
+      "h": 844,
+      "title": "E · Mobile app: Home",
+      "w": 390,
+      "x": 2720,
+      "y": 3300
+    },
+    "MobileResults.dc.html": {
+      "h": 844,
+      "title": "E · Mobile app: Photo results",
+      "w": 390,
+      "x": 3190,
+      "y": 3300
+    },
+    "VismeHaus.dc.html": {
+      "x": 0,
+      "y": 4900,
+      "w": 1280,
+      "h": 1180,
+      "title": "1 · Texturized and Dynamic (HAUS palette)",
+      "expand": "fill"
+    },
+    "VismeDetails.dc.html": {
+      "x": 1360,
+      "y": 4900,
+      "w": 1280,
+      "h": 1180,
+      "title": "2 · Classy and Traditional (details.ch palette)",
+      "expand": "fill"
+    },
+    "VismeUmwelt.dc.html": {
+      "x": 2720,
+      "y": 4900,
+      "w": 1280,
+      "h": 1180,
+      "title": "3 · Clean and Modern (Umwelt palette)",
+      "expand": "fill"
+    },
+    "VismeGusto.dc.html": {
+      "x": 4080,
+      "y": 4900,
+      "w": 1280,
+      "h": 1180,
+      "title": "4 · Minimal Yet Warm (Gusto palette)",
+      "expand": "fill"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-10T12:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "titleA": {
+      "kind": "title1",
+      "maxW": 2640,
+      "text": "A · Editorial (chosen): restored to the first version",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "titleB": {
+      "kind": "title1",
+      "maxW": 2640,
+      "text": "B · Minimal Neutral: white and gray search tool, Inter",
+      "w": 240,
+      "x": 0,
+      "y": 1300
+    },
+    "titleMore": {
+      "kind": "title1",
+      "maxW": 3580,
+      "text": "More directions: C Lookbook, E Mobile app",
+      "w": 240,
+      "x": 0,
+      "y": 3000
+    },
+    "titleVisme": {
+      "kind": "title1",
+      "maxW": 5360,
+      "text": "Palettes from the Visme article, one design each",
+      "x": 0,
+      "y": 4600
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "EditorialResults.dc.html",
+    "MinimalHome.dc.html",
+    "MinimalResults.dc.html",
+    "LookbookHome.dc.html",
+    "MobileHome.dc.html",
+    "MobileResults.dc.html",
+    "VismeHaus.dc.html",
+    "VismeDetails.dc.html",
+    "VismeUmwelt.dc.html",
+    "VismeGusto.dc.html"
+  ],
+  "pages": [],
+  "title": "FashionLens Design Directions"
+}

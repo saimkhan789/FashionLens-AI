@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FashionLens mobile: Photo results</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1a1a1a;text-decoration:none}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #fafaf8; color: #1a1a1a; font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.5">
+
+  <div style="position: relative; height: 300px; background: linear-gradient(165deg, #ecdccf, #b98d76)">
+    <div style="position: absolute; left: 26%; top: 22%; width: 48%; height: 42%; border: 1.5px solid {{accent}}; border-radius: 8px"></div>
+    <span style="position: absolute; left: 26%; top: calc(22% - 24px); padding: 1px 9px; border-radius: 5px; background: {{accent}}; color: #ffffff; font-size: 11px; font-weight: 500">Kurta</span>
+    <div style="position: absolute; left: 32%; top: 68%; width: 36%; height: 28%; border: 1.5px dashed #ffffff; border-radius: 8px"></div>
+    <a href="#" aria-label="Back" style="position: absolute; left: 16px; top: 18px; width: 44px; height: 44px; border-radius: 999px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: grid; place-items: center; box-shadow: 0 8px 18px -8px rgba(26,26,26,0.35)">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+    </a>
+    <a href="#" style="position: absolute; right: 16px; top: 18px; height: 44px; padding: 0 16px; border-radius: 999px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; gap: 6px; font-size: 13px; box-shadow: 0 8px 18px -8px rgba(26,26,26,0.35)">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>New photo</a>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 270px; bottom: 0; border-radius: 26px 26px 0 0; background: #fafaf8; box-shadow: 0 -16px 36px -18px rgba(26,26,26,0.35); padding: 10px 16px 0">
+    <div style="width: 40px; height: 4px; margin: 0 auto 14px; border-radius: 999px; background: #d6d6d0"></div>
+    <div style="display: flex; gap: 8px; overflow: hidden">
+      <button type="button" style="flex-shrink: 0; padding: 8px 15px; border: 0; border-radius: 999px; background: #1a1a1a; color: #ffffff; font: inherit; font-size: 13px">Kurta</button>
+      <button type="button" style="flex-shrink: 0; padding: 8px 15px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px">Trousers</button>
+      <button type="button" style="flex-shrink: 0; padding: 8px 15px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px">Dupatta</button>
+      <button type="button" style="flex-shrink: 0; padding: 8px 15px; border: 1px solid #d6d6d0; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px">Full look</button>
+    </div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; margin: 16px 2px 12px">
+      <h1 style="margin: 0; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600">Kurtas like <span style="font-style: italic; font-weight: 500">yours</span></h1>
+      <span style="font-size: 12px; color: #6b6b64">24 results</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 12px">
+      <sc-for list="{{products}}" as="p" hint-placeholder-count="4">
+        <article style="position: relative">
+          <div style="height: 196px; border-radius: 14px; background: {{p.tone}}; box-shadow: 0 14px 26px -16px rgba(26,26,26,0.45)"></div>
+          <button type="button" aria-label="Save" style="position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: 0; border-radius: 999px; background: rgba(255,255,255,0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: grid; place-items: center">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"></path></svg>
+          </button>
+          <p style="margin: 8px 0 0; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6b64">{{p.brand}}</p>
+          <p style="margin: 0; font-size: 13px; font-weight: 500">Rs [price]</p>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+
+  <a href="#" style="position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); height: 48px; padding: 0 22px; border-radius: 999px; background: #1a1a1a; color: #ffffff; display: flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 16px 30px -10px rgba(26,26,26,0.6)">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>Filter and sort</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#c8502a","options":["#c8502a","#1a1a1a","#7a5c3e"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tones = ['linear-gradient(160deg, #ecdccf, #c39c86)', 'linear-gradient(160deg, #e4e8df, #a9b6a4)', 'linear-gradient(160deg, #f1e7d5, #cdb68e)', 'linear-gradient(160deg, #ebe2ec, #b5a2ba)'];
+    return {
+      accent: this.props.accent ?? '#c8502a',
+      products: tones.map((tone, i) => ({ tone, brand: i === 0 ? 'Limelight' : '[Brand]' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
