@@ -107,7 +107,7 @@ async def run_job(job_id: int) -> None:
         job = await s.get(ImportJob, job_id)
         store = await s.get(Store, job.store_id)
     started = datetime.now(timezone.utc)
-    await _update_job(job_id, status="running", stage="fetching")
+    await _update_job(job_id, status="running", stage="fetching", found=0, embedded=0, to_embed=0, error=None)
     print(f"[IMPORT] {store.name}: starting ({store.url})")
 
     try:
@@ -158,11 +158,15 @@ async def _work() -> None:
 
 async def start_worker() -> None:
     global _worker
-    # Jobs interrupted by a restart can't resume mid-way; re-queue them from the start.
+    # Imports only ever start from an explicit admin action (Add / Sync, or `run.py import`),
+    # never on their own at startup. Jobs cut off by a restart are marked as interrupted.
     async with SessionLocal() as s:
-        stale = (await s.scalars(select(ImportJob.id).where(ImportJob.status.in_(["queued", "running"])).order_by(ImportJob.id))).all()
-    for job_id in stale:
-        _queue.put_nowait(job_id)
+        await s.execute(
+            update(ImportJob).where(ImportJob.status.in_(["queued", "running"]))
+            .values(status="failed", error="Interrupted by a server restart. Press Sync to run it again",
+                    finished_at=datetime.now(timezone.utc))
+        )
+        await s.commit()
     _worker = asyncio.create_task(_work())
 
 

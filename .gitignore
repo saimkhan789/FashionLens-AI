@@ -31,3 +31,4 @@ models/embeddings/
 node_modules/
 .next/
 .venv/
+backups/

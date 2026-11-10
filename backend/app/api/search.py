@@ -16,11 +16,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ai import models as ai
 from app.ai.detection import category_scope, detect_items
-from app.auth import optional_user
 from app.db import get_session
 from app.models import Product, SearchHistory, Store, User
 from app.net import UnsafeURL, ensure_public_url, make_client
 from app.search import Filters, parse_query, product_out, vector_search
+from app.usage import Visitor, ensure_allowed, quota, record_search, visitor
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -73,16 +73,20 @@ async def text_search(
     limit: int = Query(default=PAGE, ge=1, le=60),
     f: Filters = Depends(filters_dep),
     session: AsyncSession = Depends(get_session),
-    user: User | None = Depends(optional_user),
+    v: Visitor = Depends(visitor),
 ):
     _require_models()
+    if offset == 0:  # only a new search counts against a guest's free searches, not paging
+        await ensure_allowed(session, v, "text")
     stores = (await session.execute(select(Store.id, Store.name).where(Store.active))).all()
     query = parse_query(q, stores, f)
     vec = await asyncio.to_thread(ai.embed_text, query)
     results, has_more = await vector_search(session, vec, f, offset, limit)
     if offset == 0:
-        await _save_history(session, user, "text", q, len(results))
-    return {"query": query, "filters": f.as_dict(), "results": results, "has_more": has_more}
+        await record_search(session, v, "text", q)
+        await _save_history(session, v.user, "text", q, len(results))
+    return {"query": query, "filters": f.as_dict(), "results": results, "has_more": has_more,
+            "guest": await quota(session, v)}
 
 
 async def _fetch_image_url(url: str) -> bytes:
@@ -148,11 +152,12 @@ async def image_search(
     image_url: str | None = Form(default=None),
     f: Filters = Depends(filters_dep),
     session: AsyncSession = Depends(get_session),
-    user: User | None = Depends(optional_user),
+    v: Visitor = Depends(visitor),
 ):
     """Finds every garment in the photo and returns matches for each one.
     Accepts an uploaded file or a link (image URL, Pinterest pin, product page)."""
     _require_models()
+    await ensure_allowed(session, v, "image")
     if file is not None:
         data = await file.read(MAX_IMAGE_BYTES + 1)
     elif image_url:
@@ -171,8 +176,15 @@ async def image_search(
 
     for item, (label, vec) in zip(items, vectors):
         item["results"], item["has_more"] = await vector_search(session, vec, _scoped(f, label), 0, PAGE)
-    await _save_history(session, user, "image", image_url or "upload", len(items[0]["results"]))
-    return {"search_id": search_id, "filters": f.as_dict(), "items": items}
+    await record_search(session, v, "image")
+    await _save_history(session, v.user, "image", image_url or "upload", len(items[0]["results"]))
+    return {"search_id": search_id, "filters": f.as_dict(), "items": items, "guest": await quota(session, v)}
+
+
+@router.get("/quota")
+async def search_quota(session: AsyncSession = Depends(get_session), v: Visitor = Depends(visitor)):
+    """Free searches a guest has left (null when signed in: unlimited)."""
+    return {"guest": await quota(session, v)}
 
 
 @router.get("/results")
@@ -205,5 +217,5 @@ async def similar_products(
     if row is None or row[0].embedding is None:
         raise HTTPException(status_code=404, detail="Product not found")
     product, store_name = row
-    results, has_more = await vector_search(session, np.asarray(product.embedding), f, offset, limit, exclude_id=product.id)
+    results, has_more = await vector_search(session, np.asarray(product.embedding, dtype=np.float32), f, offset, limit, exclude_id=product.id)
     return {"product": product_out(product, store_name), "results": results, "has_more": has_more}

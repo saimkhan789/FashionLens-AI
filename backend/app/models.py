@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from decimal import Decimal
 
-from pgvector.sqlalchemy import Vector
+from pgvector.sqlalchemy import HALFVEC
 from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -20,7 +20,9 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(80))
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column(String(255))
+    # Null for accounts created through Google sign-in.
+    hashed_password: Mapped[str | None] = mapped_column(String(255))
+    google_sub: Mapped[str | None] = mapped_column(String(64), unique=True)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
@@ -59,7 +61,8 @@ class Product(Base):
     image_url: Mapped[str] = mapped_column(Text)
     product_url: Mapped[str] = mapped_column(Text)
     available: Mapped[bool] = mapped_column(Boolean, default=True)
-    embedding: Mapped[list[float] | None] = mapped_column(Vector(EMBED_DIM))
+    # halfvec (16-bit floats) halves storage vs vector with no measurable loss in ranking.
+    embedding: Mapped[list[float] | None] = mapped_column(HALFVEC(EMBED_DIM))
     # Which image the embedding was computed from, so re-syncs only re-embed changed images.
     embedded_image_url: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
@@ -102,3 +105,31 @@ class ImportJob(Base):
     error: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class SearchEvent(Base):
+    """One row per search (guest or signed in). Drives guest limits and admin stats;
+    unlike SearchHistory, users can't clear it."""
+    __tablename__ = "search_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    query_type: Mapped[str] = mapped_column(String(10))  # text | image
+    query: Mapped[str | None] = mapped_column(String(300))  # text searches only
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), index=True)
+    guest_id: Mapped[str | None] = mapped_column(String(32), index=True)
+    ip_hash: Mapped[str | None] = mapped_column(String(32), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
+
+
+class ClickEvent(Base):
+    """A visit to a brand's product page from FashionLens (logged by /api/go)."""
+    __tablename__ = "click_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    product_id: Mapped[int | None] = mapped_column(ForeignKey("products.id", ondelete="SET NULL"))
+    store_id: Mapped[int] = mapped_column(ForeignKey("stores.id", ondelete="CASCADE"), index=True)
+    source: Mapped[str | None] = mapped_column(String(20))  # search | image | similar | saved | history
+    # Clicks are plain link navigations (no auth header), so they're tied to the browser
+    # cookie only: enough to count unique visitors per brand.
+    browser_id: Mapped[str | None] = mapped_column(String(32))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)

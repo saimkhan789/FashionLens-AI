@@ -41,8 +41,34 @@ async def init_db() -> None:
     async with engine.begin() as conn:
         await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         await conn.run_sync(Base.metadata.create_all)
+        await _upgrade_schema(conn)
         await conn.execute(text(
             "CREATE INDEX IF NOT EXISTS products_embedding_hnsw "
-            "ON products USING hnsw (embedding vector_cosine_ops)"
+            "ON products USING hnsw (embedding halfvec_cosine_ops)"
         ))
     print("[DB] Ready")
+
+
+async def _upgrade_schema(conn) -> None:
+    """Brings databases created by earlier versions up to date. create_all only adds
+    missing tables, not columns. Every statement here must be safe to re-run.
+    TODO: replace with Alembic migrations."""
+    from app.models import EMBED_DIM
+
+    for stmt in (
+        "ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub VARCHAR(64) UNIQUE",
+        "ALTER TABLE users ALTER COLUMN hashed_password DROP NOT NULL",
+    ):
+        await conn.execute(text(stmt))
+
+    # vector(768) -> halfvec(768): halves the size of every embedding and its index.
+    coltype = await conn.scalar(text(
+        "SELECT format_type(atttypid, atttypmod) FROM pg_attribute "
+        "WHERE attrelid = 'products'::regclass AND attname = 'embedding'"
+    ))
+    if coltype and coltype.startswith("vector"):
+        print("[DB] Converting embeddings to halfvec (one-time) ...")
+        await conn.execute(text("DROP INDEX IF EXISTS products_embedding_hnsw"))
+        await conn.execute(text(
+            f"ALTER TABLE products ALTER COLUMN embedding TYPE halfvec({EMBED_DIM}) USING embedding::halfvec({EMBED_DIM})"
+        ))

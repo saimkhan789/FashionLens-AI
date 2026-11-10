@@ -28,10 +28,11 @@ def _load() -> None:
 
         print("[AI] Loading embedding model...")
         _embed_model, _, _preprocess = open_clip.create_model_and_transforms(settings.EMBED_MODEL)
-        _embed_model.eval()
+        _embed_model.eval().requires_grad_(False)
         _tokenizer = open_clip.get_tokenizer(settings.EMBED_MODEL)
         print("[AI] Loading garment detector...")
         _detector = pipeline("object-detection", model=settings.DETECT_MODEL)
+        _detector.model.eval().requires_grad_(False)
         print("[AI] Models ready")
     except Exception as e:  # surfaced through status() / require_ready()
         _error = e
@@ -66,7 +67,7 @@ def embed_images(images: list[Image.Image]) -> np.ndarray:
     batch = torch.stack([_preprocess(img.convert("RGB")) for img in images])
     with _lock, torch.inference_mode():
         vecs = _embed_model.encode_image(batch, normalize=True)
-    return vecs.cpu().numpy().astype("float32")
+    return vecs.detach().cpu().numpy().astype("float32")
 
 
 def embed_text(query: str) -> np.ndarray:
@@ -75,7 +76,7 @@ def embed_text(query: str) -> np.ndarray:
     require_ready(timeout=300)
     with _lock, torch.inference_mode():
         vec = _embed_model.encode_text(_tokenizer([query]), normalize=True)
-    return vec[0].cpu().numpy().astype("float32")
+    return vec[0].detach().cpu().numpy().astype("float32")
 
 
 def detect_raw(image: Image.Image, threshold: float) -> list[dict]:

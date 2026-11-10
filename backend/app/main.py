@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from app.ai import models as ai
-from app.api import account, admin, auth, catalog, search
+from app.api import account, admin, auth, catalog, go, search
 from app.config import settings
 from app.db import init_db
 from app.ingest import pipeline
@@ -30,13 +30,23 @@ app.add_middleware(
 )
 
 api = APIRouter(prefix="/api")
-for module in (auth, search, catalog, account, admin):
+for module in (auth, search, catalog, account, admin, go):
     api.include_router(module.router)
 
 
 @api.get("/health")
 async def health():
     return {"status": "ok", "models": ai.status()}
+
+
+@api.get("/config")
+async def public_config():
+    """Settings the frontend needs at runtime (the static build can't read .env)."""
+    return {
+        "google_client_id": settings.GOOGLE_CLIENT_ID or None,
+        "guest_text_searches": settings.GUEST_TEXT_SEARCHES,
+        "guest_image_searches": settings.GUEST_IMAGE_SEARCHES,
+    }
 
 
 app.include_router(api)

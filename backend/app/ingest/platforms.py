@@ -38,6 +38,38 @@ async def _json(client: httpx.AsyncClient, url: str, **params):
     return None
 
 
+class StoreUnavailable(RuntimeError):
+    """The store kept refusing or failing requests: the import must stop, not treat the
+    missing pages as an empty catalogue (that would mark real products as removed)."""
+
+
+async def _json_page(client: httpx.AsyncClient, url: str, attempts: int = 5, end_statuses: tuple[int, ...] = (), **params):
+    """Fetches one catalogue page, honouring rate limits (429 + Retry-After) and
+    retrying transient errors with backoff. Raises StoreUnavailable if it never succeeds.
+    end_statuses: responses that mean "past the last page" (returns None)."""
+    delay = 5.0
+    last = "no response"
+    for attempt in range(attempts):
+        try:
+            r = await client.get(url, params=params)
+            if r.status_code == 200 and "json" in r.headers.get("content-type", ""):
+                return r.json()
+            if r.status_code in end_statuses:
+                return None
+            last = f"HTTP {r.status_code}"
+            if r.status_code not in (429, 500, 502, 503, 504):
+                raise StoreUnavailable(f"{url} returned {last}")
+            retry_after = r.headers.get("retry-after", "")
+            wait = float(retry_after) if retry_after.replace(".", "", 1).isdigit() else delay
+        except (httpx.HTTPError, ValueError) as e:
+            last, wait = repr(e), delay
+        if attempt < attempts - 1:
+            print(f"[IMPORT] {url} page {params.get('page')}: {last}, retrying in {min(wait, 120):.0f}s")
+            await asyncio.sleep(min(wait, 120))
+            delay *= 2
+    raise StoreUnavailable(f"The store kept refusing requests ({last}). It may be rate-limiting us, so try again later")
+
+
 async def detect_platform(client: httpx.AsyncClient, base: str) -> str:
     data = await _json(client, f"{base}/products.json", limit=1)
     if isinstance(data, dict) and "products" in data:
@@ -57,8 +89,8 @@ def _shopify_image(src: str) -> str:
 async def read_shopify(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
     page = 1
     while True:
-        data = await _json(client, f"{base}/products.json", limit=250, page=page)
-        items = (data or {}).get("products") or []
+        data = await _json_page(client, f"{base}/products.json", limit=250, page=page)
+        items = (data.get("products") or []) if isinstance(data, dict) else []
         if not items:
             return
         batch = []
@@ -86,7 +118,7 @@ async def read_shopify(client: httpx.AsyncClient, base: str) -> AsyncIterator[li
         if len(items) < 250:
             return
         page += 1
-        await asyncio.sleep(0.5)  # be polite
+        await asyncio.sleep(1.5)  # be polite: Shopify rate-limits /products.json
 
 
 # ---------------------------------------------------------------- WooCommerce
@@ -94,8 +126,10 @@ async def read_shopify(client: httpx.AsyncClient, base: str) -> AsyncIterator[li
 async def read_woocommerce(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
     page = 1
     while True:
-        items = await _json(client, f"{base}/wp-json/wc/store/v1/products", per_page=100, page=page)
-        if not items:
+        # WooCommerce answers 400 for a page number past the end.
+        items = await _json_page(client, f"{base}/wp-json/wc/store/v1/products", end_statuses=(400,) if page > 1 else (),
+                                 per_page=100, page=page)
+        if not isinstance(items, list) or not items:
             return
         batch = []
         for p in items:
