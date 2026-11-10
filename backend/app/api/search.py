@@ -89,9 +89,9 @@ async def text_search(
             "guest": await quota(session, v)}
 
 
-async def _fetch_image_url(url: str) -> bytes:
+async def _fetch_image_url(url: str) -> tuple[bytes, str]:
     """Downloads an image link. Page links (a Pinterest pin, a product page) are
-    resolved to the page's main image via its og:image tag."""
+    resolved to the page's main image via its og:image tag. Returns (bytes, final image URL)."""
     async with make_client(follow_redirects=False) as client:
         for _ in range(2):  # the link itself, then the og:image it points to
             for _hop in range(5):  # follow redirects by hand so every hop is checked
@@ -105,7 +105,7 @@ async def _fetch_image_url(url: str) -> bytes:
                 raise HTTPException(status_code=400, detail="Couldn't open that link")
             ctype = r.headers.get("content-type", "")
             if ctype.startswith("image/"):
-                return r.content
+                return r.content, url
             if "html" not in ctype:
                 break
             soup = BeautifulSoup(r.text, "html.parser")
@@ -158,11 +158,12 @@ async def image_search(
     Accepts an uploaded file or a link (image URL, Pinterest pin, product page)."""
     _require_models()
     await ensure_allowed(session, v, "image")
+    resolved_url = None
     if file is not None:
         data = await file.read(MAX_IMAGE_BYTES + 1)
     elif image_url:
         try:
-            data = await _fetch_image_url(image_url.strip())
+            data, resolved_url = await _fetch_image_url(image_url.strip())
         except UnsafeURL as e:
             raise HTTPException(status_code=400, detail=str(e))
         except httpx.HTTPError:
@@ -178,7 +179,8 @@ async def image_search(
         item["results"], item["has_more"] = await vector_search(session, vec, _scoped(f, label), 0, PAGE)
     await record_search(session, v, "image")
     await _save_history(session, v.user, "image", image_url or "upload", len(items[0]["results"]))
-    return {"search_id": search_id, "filters": f.as_dict(), "items": items, "guest": await quota(session, v)}
+    return {"search_id": search_id, "image_url": resolved_url, "filters": f.as_dict(), "items": items,
+            "guest": await quota(session, v)}
 
 
 @router.get("/quota")

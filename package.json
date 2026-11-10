@@ -1,0 +1,10 @@
+{
+  "name": "fashionlens-ai",
+  "private": true,
+  "description": "One command for everything: database (Docker or DATABASE_URL), FastAPI backend and Next.js frontend.",
+  "scripts": {
+    "dev": "python run.py --dev",
+    "start": "python run.py",
+    "import": "python run.py import"
+  }
+}
