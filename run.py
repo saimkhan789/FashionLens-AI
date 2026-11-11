@@ -46,7 +46,10 @@ def ensure_venv() -> None:
     if not VENV_PYTHON.exists():
         log("Creating Python virtualenv in backend/venv ...")
         subprocess.check_call([sys.executable, "-m", "venv", str(VENV)])
-    sys.exit(subprocess.call([str(VENV_PYTHON), __file__, *sys.argv[1:]]))
+    try:
+        sys.exit(subprocess.call([str(VENV_PYTHON), __file__, *sys.argv[1:]]))
+    except KeyboardInterrupt:  # Ctrl+C: the inner run.py shuts everything down itself
+        sys.exit(0)
 
 
 def ensure_python_deps() -> None:
@@ -165,32 +168,55 @@ def stop(procs: list[subprocess.Popen]) -> None:
                 p.terminate()
 
 
+def port_in_use(port: int) -> bool:
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.5)
+        return s.connect_ex(("127.0.0.1", port)) == 0
+
+
 def serve(args) -> None:
+    ports = [args.port] + ([3000] if args.dev else [])
+    busy = [p for p in ports if port_in_use(p)]
+    if busy:
+        fail(f"Port {', '.join(map(str, busy))} is already in use, probably FashionLens from an earlier run.\n"
+             "      Close that terminal window, or end the leftover python/node processes in Task Manager, then try again.")
     ensure_database()
-    procs = []
     uvicorn = [sys.executable, "-m", "uvicorn", "app.main:app", "--host", args.host, "--port", str(args.port)]
+    procs: dict[str, subprocess.Popen] = {}
     try:
         if args.dev:
             ensure_node_modules()
-            procs.append(subprocess.Popen([*uvicorn, "--reload"], cwd=BACKEND))
+            # Watch only the app's code: watching backend/ also watched ~43k files in venv/,
+            # which burned CPU and restarted the server (and any running import) needlessly.
+            procs["backend"] = subprocess.Popen([*uvicorn, "--reload", "--reload-dir", "app"], cwd=BACKEND)
             env = {**os.environ, "API_PROXY_TARGET": f"http://127.0.0.1:{args.port}"}
-            procs.append(subprocess.Popen([shutil.which("npm"), "run", "dev"], cwd=FRONTEND, env=env))
+            # Run Next directly with node, not through npm.cmd: a .cmd wrapper on Windows
+            # answers Ctrl+C with "Terminate batch job (Y/N)?" and leaves the terminal stuck.
+            next_bin = FRONTEND / "node_modules" / "next" / "dist" / "bin" / "next"
+            procs["frontend"] = subprocess.Popen([shutil.which("node") or "node", str(next_bin), "dev"], cwd=FRONTEND, env=env)
             url = "http://localhost:3000"
         else:
             ensure_frontend_built()
-            procs.append(subprocess.Popen(uvicorn, cwd=BACKEND))
+            procs["app"] = subprocess.Popen(uvicorn, cwd=BACKEND)
             url = f"http://localhost:{args.port}"
 
         if wait_for(f"http://127.0.0.1:{args.port}/api/health") and wait_for(url):
-            log(f"FashionLens is running at {url}  (AI models finish loading in the background)")
+            log(f"FashionLens is running at {url}  (AI models finish loading in the background). Press Ctrl+C to stop.")
             if not args.no_browser:
                 webbrowser.open(url)
-        while all(p.poll() is None for p in procs):
+        while all(p.poll() is None for p in procs.values()):
             time.sleep(0.5)
+        # Something stopped on its own: say what, instead of silently closing everything.
+        for name, p in procs.items():
+            if p.poll() is not None:
+                print(f"\033[31m[run] The {name} stopped unexpectedly (exit code {p.returncode}). "
+                      f"The error is in the output above; shutting the rest down.\033[0m", file=sys.stderr)
     except KeyboardInterrupt:
-        pass
+        log("Stopping ...")
     finally:
-        stop(procs)
+        stop(list(procs.values()))
 
 
 def import_store(args) -> None:
