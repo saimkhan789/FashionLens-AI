@@ -111,18 +111,17 @@ async def run_job(job_id: int) -> None:
     print(f"[IMPORT] {store.name}: starting ({store.url})")
 
     try:
+        replace_crawled = False
         async with make_client() as client:
             # "generic" is re-checked every sync: a store wrongly classed as generic once
             # (e.g. its catalogue API was rate-limited) shouldn't stay stuck crawling pages.
             if not store.platform or store.platform == "generic":
                 was_generic = store.platform == "generic"
                 store.platform = await detect_platform(client, store.url)
+                # Page-crawl products use different ids than the catalogue API; they are
+                # replaced below, but only once the new catalogue has been read successfully.
+                replace_crawled = was_generic and store.platform != "generic"
                 async with SessionLocal() as s:
-                    if was_generic and store.platform != "generic":
-                        # Page-crawl products use different ids than the catalogue API, so
-                        # they'd linger as hidden duplicates: start this store afresh.
-                        await s.execute(delete(Product).where(Product.store_id == store.id))
-                        print(f"[IMPORT] {store.name}: now recognised as {store.platform}, replacing crawled products")
                     await s.execute(update(Store).where(Store.id == store.id).values(platform=store.platform))
                     await s.commit()
 
@@ -136,9 +135,15 @@ async def run_job(job_id: int) -> None:
             if not found:
                 raise RuntimeError(f"No products found (platform: {store.platform})")
 
-            # Anything we didn't see this time was removed from the store.
+            # Anything we didn't see this time was removed from the store. (When the store just
+            # moved from page crawling to its catalogue API, those old rows are duplicates: drop them.)
             async with SessionLocal() as s:
-                await s.execute(update(Product).where(Product.store_id == store.id, Product.updated_at < started).values(available=False))
+                stale = (Product.store_id == store.id, Product.updated_at < started)
+                if replace_crawled:
+                    await s.execute(delete(Product).where(*stale))
+                    print(f"[IMPORT] {store.name}: now read through its {store.platform} catalogue, replaced crawled products")
+                else:
+                    await s.execute(update(Product).where(*stale).values(available=False))
                 await s.commit()
             print(f"[IMPORT] {store.name}: {found} products, embedding images...")
 
