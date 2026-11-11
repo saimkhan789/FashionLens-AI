@@ -138,6 +138,8 @@ function filterParams(f: Filters, extra: Record<string, string | number> = {}): 
 export const api = {
   config: () => request<PublicConfig>("/config"),
   facets: () => request<Facets>("/catalog/facets"),
+  latest: (category?: string, limit = 8) =>
+    request<{ results: Product[] }>(`/catalog/latest?limit=${limit}${category ? `&category=${encodeURIComponent(category)}` : ""}`),
 
   quota: () => request<{ guest: GuestQuota }>("/search/quota"),
   textSearch: (q: string, f: Filters, offset = 0) =>

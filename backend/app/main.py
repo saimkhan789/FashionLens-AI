@@ -61,7 +61,10 @@ async def frontend(path: str):
         raise HTTPException(status_code=404)
     if not root.is_dir():
         return {"detail": "Frontend not built. Run `python run.py` (it builds it) or `python run.py --dev`."}
-    for candidate in (path, f"{path}.html", f"{path}/index.html"):
+    path = path.strip("/")
+    # "" (the home page) must become "index.html": "/index.html" would resolve to the drive root.
+    candidates = ("index.html",) if not path else (path, f"{path}.html", f"{path}/index.html")
+    for candidate in candidates:
         file = (root / candidate).resolve()
         if file.is_file() and file.is_relative_to(root):
             return FileResponse(file)

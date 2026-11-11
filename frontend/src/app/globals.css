@@ -1,20 +1,27 @@
 @import "tailwindcss";
 
-/* FashionLens palette: editorial off-white + ink, one rust accent. */
+/* FashionLens "Combined" design: off-white paper, ink, one rust accent. */
 @theme inline {
   --color-paper: #fafaf8;
+  --color-sand: #f3ece4;
   --color-surface: #ffffff;
+  --color-chip: #f1ede6;
   --color-ink: #1a1a1a;
   --color-ink-soft: #4a4a45;
-  --color-muted: #6b6b64; /* 5:1 on paper; the old #77776f was under 4.5:1 */
-  --color-line: #e8e8e4;
-  --color-line-strong: #d6d6d0;
+  --color-muted: #6b6b64;
+  --color-line: #ece9e3;
+  --color-line-strong: #ddd6cc;
   --color-accent: #c8502a;
   --color-accent-dark: #a8401e;
   --color-accent-soft: #fdf0ec;
 
-  --font-display: var(--font-playfair), Georgia, serif;
-  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+
+  --shadow-card: 0 24px 40px -26px rgba(26, 26, 26, 0.55);
+  --shadow-panel: 0 36px 70px -36px rgba(26, 26, 26, 0.45);
+  --shadow-accent: 0 12px 26px -10px rgba(200, 80, 42, 0.7);
+  --shadow-soft: 0 12px 26px -16px rgba(26, 26, 26, 0.45);
 }
 
 html {
@@ -36,22 +43,36 @@ body {
   background: var(--color-accent-soft);
 }
 
-a {
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-accent);
+  width: 16px;
+  height: 16px;
 }
 
-/* Loading placeholders: a flat tone that fades, no shimmer gradient. */
-@keyframes fade {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to { background-position: 400px 0; }
 }
 
 .skeleton {
-  background: #ece9e3;
-  animation: fade 1.6s ease-in-out infinite;
+  background: linear-gradient(90deg, #efebe4 0%, #f7f4ef 50%, #efebe4 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton { animation: none; }
+  .skeleton,
+  .float-tile,
+  .float-tile img { animation: none !important; }
 }
