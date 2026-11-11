@@ -70,14 +70,47 @@ async def _json_page(client: httpx.AsyncClient, url: str, attempts: int = 5, end
     raise StoreUnavailable(f"The store kept refusing requests ({last}). It may be rate-limiting us, so try again later")
 
 
+_SHOPIFY_MARKS = ("cdn.shopify.com", "/cdn/shop/", "Shopify.theme", "shopify-section", "myshopify.com")
+_WOO_MARKS = ("woocommerce", "wp-content/plugins/woocommerce", "wc-block")
+
+
+async def _homepage(client: httpx.AsyncClient, base: str) -> str:
+    try:
+        r = await client.get(base)
+        return r.text if r.status_code == 200 else ""
+    except httpx.HTTPError:
+        return ""
+
+
 async def detect_platform(client: httpx.AsyncClient, base: str) -> str:
-    data = await _json(client, f"{base}/products.json", limit=1)
-    if isinstance(data, dict) and "products" in data:
+    """Shopify and WooCommerce stores have full catalogue APIs, far better than crawling
+    product pages, so we try hard to recognise them: the API is retried politely, and the
+    home page's own markup is checked too (a rate-limited API must not demote a store to
+    "generic", which is what cut one Shopify store down to 46 products)."""
+    try:
+        data = await _json_page(client, f"{base}/products.json", attempts=3, end_statuses=(401, 403, 404), limit=1)
+        if isinstance(data, dict) and "products" in data:
+            return "shopify"
+    except StoreUnavailable:
+        pass
+    html = await _homepage(client, base)
+    if any(m in html for m in _SHOPIFY_MARKS):
         return "shopify"
     data = await _json(client, f"{base}/wp-json/wc/store/v1/products", per_page=1)
-    if isinstance(data, list):
+    if isinstance(data, list) or any(m in html.lower() for m in _WOO_MARKS):
         return "woocommerce"
     return "generic"
+
+
+# Vector drawings (logos, size charts) can't be read by the image model.
+_NOT_PHOTOS = (".svg", ".gif")
+
+
+def _first_photo(srcs: list[str]) -> str | None:
+    for src in srcs:
+        if src and not urlsplit(src).path.lower().endswith(_NOT_PHOTOS):
+            return src
+    return None
 
 
 # ---------------------------------------------------------------- Shopify
@@ -95,8 +128,8 @@ async def read_shopify(client: httpx.AsyncClient, base: str) -> AsyncIterator[li
             return
         batch = []
         for p in items:
-            images = p.get("images") or []
-            if not images:
+            image = _first_photo([i.get("src", "") for i in p.get("images") or []])
+            if not image:
                 continue
             variants = p.get("variants") or [{}]
             prices = [to_decimal(v.get("price")) for v in variants]
@@ -106,7 +139,7 @@ async def read_shopify(client: httpx.AsyncClient, base: str) -> AsyncIterator[li
             batch.append(ProductData(
                 external_id=str(p["id"]),
                 title=p.get("title") or "",
-                image_url=_shopify_image(images[0]["src"]),
+                image_url=_shopify_image(image),
                 product_url=f"{base}/products/{p['handle']}",
                 price=price,
                 compare_at_price=compare if compare and price and compare > price else None,
@@ -133,8 +166,8 @@ async def read_woocommerce(client: httpx.AsyncClient, base: str) -> AsyncIterato
             return
         batch = []
         for p in items:
-            images = p.get("images") or []
-            if not images:
+            image = _first_photo([i.get("src", "") for i in p.get("images") or []])
+            if not image:
                 continue
             prices = p.get("prices") or {}
             unit = 10 ** int(prices.get("currency_minor_unit") or 0)
@@ -145,7 +178,7 @@ async def read_woocommerce(client: httpx.AsyncClient, base: str) -> AsyncIterato
             batch.append(ProductData(
                 external_id=str(p["id"]),
                 title=BeautifulSoup(p.get("name") or "", "html.parser").get_text(),
-                image_url=images[0]["src"],
+                image_url=image,
                 product_url=p.get("permalink") or base,
                 price=price,
                 compare_at_price=regular if regular and price and regular > price else None,
@@ -237,9 +270,9 @@ def parse_product_page(html: str, url: str) -> ProductData | None:
             price = to_decimal(offers.get("lowPrice"))
         else:
             price = to_decimal(offers.get("price") if isinstance(offers, dict) else None)
-        image = _first(ld.get("image"))
-        if isinstance(image, dict):
-            image = image.get("url") or image.get("contentUrl")
+        images = ld.get("image") if isinstance(ld.get("image"), list) else [ld.get("image")]
+        images = [(i.get("url") or i.get("contentUrl")) if isinstance(i, dict) else i for i in images]
+        image = _first_photo([i for i in images if isinstance(i, str)] + [meta("og:image") or ""])
         availability = str(offers.get("availability", "")) if isinstance(offers, dict) else ""
         title = ld.get("name")
         return ProductData(

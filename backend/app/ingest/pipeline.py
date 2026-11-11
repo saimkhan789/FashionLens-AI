@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 
 import httpx
 from PIL import Image
-from sqlalchemy import func, or_, select, update
+from sqlalchemy import delete, func, or_, select, update
 from sqlalchemy.dialects.postgresql import insert
 
 from app.ai import models as ai
@@ -112,9 +112,17 @@ async def run_job(job_id: int) -> None:
 
     try:
         async with make_client() as client:
-            if not store.platform:
+            # "generic" is re-checked every sync: a store wrongly classed as generic once
+            # (e.g. its catalogue API was rate-limited) shouldn't stay stuck crawling pages.
+            if not store.platform or store.platform == "generic":
+                was_generic = store.platform == "generic"
                 store.platform = await detect_platform(client, store.url)
                 async with SessionLocal() as s:
+                    if was_generic and store.platform != "generic":
+                        # Page-crawl products use different ids than the catalogue API, so
+                        # they'd linger as hidden duplicates: start this store afresh.
+                        await s.execute(delete(Product).where(Product.store_id == store.id))
+                        print(f"[IMPORT] {store.name}: now recognised as {store.platform}, replacing crawled products")
                     await s.execute(update(Store).where(Store.id == store.id).values(platform=store.platform))
                     await s.commit()
 
