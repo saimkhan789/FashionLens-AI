@@ -7,7 +7,7 @@ disappeared from the store are marked unavailable so they drop out of search.
 import asyncio
 import io
 import traceback
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import httpx
 from PIL import Image
@@ -22,6 +22,10 @@ from app.models import ImportJob, Product, Store
 from app.net import make_client
 
 EMBED_BATCH = 16
+INTERRUPTED = "Interrupted by a server restart. Press Sync to run it again"
+# A sync interrupted while processing photos resumes there (without re-reading the
+# store's catalogue) if it happened within this window.
+RESUME_WINDOW = timedelta(hours=24)
 DOWNLOAD_CONCURRENCY = 16
 
 _queue: asyncio.Queue[int] = asyncio.Queue()
@@ -130,11 +134,28 @@ async def _embed_pending(job_id: int, store_id: int, client: httpx.AsyncClient) 
         await _update_job(job_id, embedded=done)
 
 
+async def _resumable(store_id: int, job_id: int) -> ImportJob | None:
+    """The store's previous job, if it was cut off by a restart while embedding photos recently."""
+    async with SessionLocal() as s:
+        prev = await s.scalar(
+            select(ImportJob).where(ImportJob.store_id == store_id, ImportJob.id != job_id)
+            .order_by(ImportJob.id.desc()).limit(1)
+        )
+    if (prev and prev.status == "failed" and prev.stage == "embedding" and prev.error == INTERRUPTED
+            and prev.found and prev.finished_at and datetime.now(timezone.utc) - prev.finished_at < RESUME_WINDOW):
+        return prev
+    return None
+
+
 async def run_job(job_id: int) -> None:
     async with SessionLocal() as s:
         job = await s.get(ImportJob, job_id)
         store = await s.get(Store, job.store_id)
     started = datetime.now(timezone.utc)
+    resume = await _resumable(store.id, job_id)
+    if resume:
+        await resume_embedding(job_id, store, resume.found)
+        return
     await _update_job(job_id, status="running", stage="fetching", found=0, embedded=0, to_embed=0, error=None)
     print(f"[IMPORT] {store.name}: starting ({store.url})")
 
@@ -197,6 +218,26 @@ async def run_job(job_id: int) -> None:
         await _update_job(job_id, status="failed", error=str(e)[:1000], finished_at=datetime.now(timezone.utc))
 
 
+async def resume_embedding(job_id: int, store: Store, found: int) -> None:
+    """Finish an interrupted sync: embed the photos still missing, without re-reading the
+    catalogue (saves the store a full re-download and avoids its rate limits)."""
+    print(f"[IMPORT] {store.name}: resuming the interrupted sync at the photo step")
+    await _update_job(job_id, status="running", stage="embedding", found=found, embedded=0, to_embed=0, error=None)
+    try:
+        async with make_client() as client:
+            await _embed_pending(job_id, store.id, client)
+        async with SessionLocal() as s:
+            count = await s.scalar(select(func.count()).where(Product.store_id == store.id, Product.available, Product.embedding.is_not(None)))
+            await s.execute(update(Store).where(Store.id == store.id).values(product_count=count, last_synced_at=datetime.now(timezone.utc)))
+            await s.commit()
+        await _update_job(job_id, status="done", stage=None, finished_at=datetime.now(timezone.utc),
+                          error="Resumed the interrupted sync: processed the remaining photos without re-reading the catalogue.")
+        print(f"[IMPORT] {store.name}: done, {count} searchable products")
+    except Exception as e:
+        traceback.print_exc()
+        await _update_job(job_id, status="failed", error=str(e)[:1000], finished_at=datetime.now(timezone.utc))
+
+
 async def _work() -> None:
     while True:
         job_id = await _queue.get()
@@ -213,7 +254,7 @@ async def start_worker() -> None:
     async with SessionLocal() as s:
         await s.execute(
             update(ImportJob).where(ImportJob.status.in_(["queued", "running"]))
-            .values(status="failed", error="Interrupted by a server restart. Press Sync to run it again",
+            .values(status="failed", error=INTERRUPTED,
                     finished_at=datetime.now(timezone.utc))
         )
         await s.commit()
