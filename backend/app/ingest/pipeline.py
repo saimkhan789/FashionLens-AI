@@ -17,7 +17,7 @@ from sqlalchemy.dialects.postgresql import insert
 from app.ai import models as ai
 from app.db import SessionLocal
 from app.ingest.common import ProductData, classify
-from app.ingest.platforms import READERS, detect_platform
+from app.ingest.platforms import READERS, SITEMAP_ID_PREFIX, detect_platform
 from app.models import ImportJob, Product, Store
 from app.net import make_client
 
@@ -41,7 +41,12 @@ async def _update_job(job_id: int, **values) -> None:
         await s.commit()
 
 
+# Columns a partial row (title/photo/link only, e.g. from a sitemap) must leave alone.
+_FULL_ONLY = ("price", "compare_at_price", "product_type", "tags", "category", "gender", "available")
+
+
 async def _upsert(store: Store, batch: list[ProductData]) -> None:
+    now = datetime.now(timezone.utc)
     rows = []
     for p in batch:
         category, gender = classify(p.title, p.product_type, p.tags)
@@ -50,17 +55,40 @@ async def _upsert(store: Store, batch: list[ProductData]) -> None:
             "product_type": (p.product_type or "")[:200] or None, "category": category, "gender": gender,
             "tags": p.tags, "price": p.price, "compare_at_price": p.compare_at_price,
             "image_url": p.image_url, "product_url": p.product_url, "available": p.available,
-            "updated_at": datetime.now(timezone.utc),
+            "updated_at": now, "_partial": p.partial,
         })
-    # Generic readers can see the same product twice (e.g. URL variants) — last one wins.
-    rows = list({r["external_id"]: r for r in rows}.values())
-    stmt = insert(Product).values(rows)
-    stmt = stmt.on_conflict_do_update(
-        index_elements=["store_id", "external_id"],
-        set_={c: stmt.excluded[c] for c in rows[0] if c not in ("store_id", "external_id")},
-    )
+
     async with SessionLocal() as s:
-        await s.execute(stmt)
+        # One product can arrive under two ids: "sitemap:<handle>" from a sitemap import and
+        # Shopify's numeric id from the catalogue. Match them by product link so it stays one
+        # row (keeping its embedding): catalogue ids win over sitemap ids.
+        existing = dict((await s.execute(
+            select(Product.product_url, Product.external_id)
+            .where(Product.store_id == store.id, Product.product_url.in_({r["product_url"] for r in rows}))
+        )).all())
+        for r in rows:
+            old_id = existing.get(r["product_url"])
+            if not old_id or old_id == r["external_id"]:
+                continue
+            if r["external_id"].startswith(SITEMAP_ID_PREFIX):
+                r["external_id"] = old_id
+            elif old_id.startswith(SITEMAP_ID_PREFIX):
+                await s.execute(update(Product).where(Product.store_id == store.id, Product.external_id == old_id)
+                                .values(external_id=r["external_id"]))
+
+        # Generic readers can see the same product twice (e.g. URL variants): last one wins.
+        rows = list({r["external_id"]: r for r in rows}.values())
+        for partial in (False, True):
+            group = [{k: v for k, v in r.items() if k != "_partial"} for r in rows if r["_partial"] is partial]
+            if not group:
+                continue
+            stmt = insert(Product).values(group)
+            keep = ("store_id", "external_id") + (_FULL_ONLY if partial else ())
+            stmt = stmt.on_conflict_do_update(
+                index_elements=["store_id", "external_id"],
+                set_={c: stmt.excluded[c] for c in group[0] if c not in keep},
+            )
+            await s.execute(stmt)
         await s.commit()
 
 
@@ -126,7 +154,8 @@ async def run_job(job_id: int) -> None:
                     await s.commit()
 
             found = 0
-            async for batch in READERS[store.platform](client, store.url):
+            info: dict = {}
+            async for batch in READERS[store.platform](client, store.url, info):
                 if not batch:
                     continue
                 await _upsert(store, batch)
@@ -153,7 +182,10 @@ async def run_job(job_id: int) -> None:
             count = await s.scalar(select(func.count()).where(Product.store_id == store.id, Product.available, Product.embedding.is_not(None)))
             await s.execute(update(Store).where(Store.id == store.id).values(product_count=count, last_synced_at=datetime.now(timezone.utc)))
             await s.commit()
-        await _update_job(job_id, status="done", stage=None, finished_at=datetime.now(timezone.utc))
+        # A completed job can still carry a note (shown in Admin), e.g. a sitemap fallback.
+        note = ("Imported from the store's sitemap because its catalogue was rate-limited. "
+                "Prices and stock will fill in on a later sync.") if info.get("fallback") == "sitemap" else None
+        await _update_job(job_id, status="done", stage=None, error=note, finished_at=datetime.now(timezone.utc))
         print(f"[IMPORT] {store.name}: done — {count} searchable products")
     except Exception as e:
         traceback.print_exc()

@@ -119,7 +119,79 @@ def _shopify_image(src: str) -> str:
     return "https:" + src if src.startswith("//") else src
 
 
-async def read_shopify(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
+SITEMAP_ID_PREFIX = "sitemap:"
+
+
+async def _fetch_text(client: httpx.AsyncClient, url: str, attempts: int = 4) -> str:
+    """GET a text resource (a sitemap), honouring 429 / Retry-After like _json_page."""
+    delay, last = 5.0, "no response"
+    for attempt in range(attempts):
+        try:
+            r = await client.get(url)
+            if r.status_code == 200:
+                return r.text
+            last = f"HTTP {r.status_code}"
+            if r.status_code not in (429, 500, 502, 503, 504):
+                raise StoreUnavailable(f"{url} returned {last}")
+            ra = r.headers.get("retry-after", "")
+            wait = float(ra) if ra.replace(".", "", 1).isdigit() else delay
+        except httpx.HTTPError as e:
+            last, wait = repr(e), delay
+        if attempt < attempts - 1:
+            print(f"[IMPORT] {url}: {last}, retrying in {min(wait, 120):.0f}s")
+            await asyncio.sleep(min(wait, 120))
+            delay *= 2
+    raise StoreUnavailable(f"The store kept refusing requests ({last}). It may be rate-limiting us, so try again later")
+
+
+async def read_shopify_sitemap(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
+    """Every Shopify store publishes product sitemaps (sitemap_products_N.xml) listing each
+    product's link, title and main photo: a handful of requests for the whole catalogue,
+    and rarely rate-limited. They carry no price or stock, so rows are marked partial."""
+    index = BeautifulSoup(await _fetch_text(client, f"{base}/sitemap.xml"), "xml")
+    maps = [loc.get_text(strip=True) for loc in index.select("sitemap > loc")]
+    maps = [m for m in maps if "sitemap_products" in m]
+    if not maps:
+        raise StoreUnavailable("This store's sitemap lists no products")
+    for i, sitemap_url in enumerate(maps):
+        if i:
+            await asyncio.sleep(1.5)
+        doc = BeautifulSoup(await _fetch_text(client, sitemap_url), "xml")
+        batch = []
+        for url in doc.find_all("url"):
+            page = next((t.get_text(strip=True) for t in url.find_all("loc") if not t.prefix), "")
+            handle = urlsplit(page).path.rstrip("/").split("/products/")[-1] if "/products/" in page else ""
+            images = [t.get_text(strip=True) for t in url.find_all("loc") if t.prefix == "image"]
+            titles = [t.get_text(strip=True) for t in url.find_all("title") if t.prefix == "image"]
+            image = _first_photo(images)
+            if not handle or not image:
+                continue
+            batch.append(ProductData(
+                external_id=f"{SITEMAP_ID_PREFIX}{handle}"[:200],
+                title=(titles[0] if titles else handle.replace("-", " ").title()),
+                image_url=_shopify_image(image),
+                product_url=f"{base}/products/{handle}",
+                partial=True,
+            ))
+        if batch:
+            yield batch
+
+
+async def read_shopify(client: httpx.AsyncClient, base: str, info: dict | None = None) -> AsyncIterator[list[ProductData]]:
+    """The full catalogue (prices, stock, tags) from /products.json; if the store keeps
+    refusing it, the product sitemap still gets every product in, without prices."""
+    try:
+        async for batch in _read_shopify_catalogue(client, base):
+            yield batch
+    except StoreUnavailable as e:
+        print(f"[IMPORT] {base}: catalogue unavailable ({e}); falling back to the product sitemap")
+        if info is not None:
+            info["fallback"] = "sitemap"
+        async for batch in read_shopify_sitemap(client, base):
+            yield batch
+
+
+async def _read_shopify_catalogue(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
     page = 1
     while True:
         data = await _json_page(client, f"{base}/products.json", limit=250, page=page)
@@ -156,7 +228,7 @@ async def read_shopify(client: httpx.AsyncClient, base: str) -> AsyncIterator[li
 
 # ---------------------------------------------------------------- WooCommerce
 
-async def read_woocommerce(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
+async def read_woocommerce(client: httpx.AsyncClient, base: str, info: dict | None = None) -> AsyncIterator[list[ProductData]]:
     page = 1
     while True:
         # WooCommerce answers 400 for a page number past the end.
@@ -299,7 +371,7 @@ def parse_product_page(html: str, url: str) -> ProductData | None:
     return None
 
 
-async def read_generic(client: httpx.AsyncClient, base: str, max_products: int = GENERIC_MAX_PRODUCTS) -> AsyncIterator[list[ProductData]]:
+async def read_generic(client: httpx.AsyncClient, base: str, info: dict | None = None, max_products: int = GENERIC_MAX_PRODUCTS) -> AsyncIterator[list[ProductData]]:
     urls = await _sitemap_urls(client, base)
     host = urlsplit(base).netloc
     urls = [u for u in dict.fromkeys(urls) if urlsplit(u).netloc == host]

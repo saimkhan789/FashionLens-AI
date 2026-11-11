@@ -50,7 +50,7 @@ export default function ProductCard({ product: p, source, aspect = "3/4" }: Prop
         <p className="mt-2.5 text-[11px] font-bold tracking-[0.08em] text-accent-dark uppercase">{p.brand}</p>
         <h3 className="mt-px line-clamp-2 text-sm leading-snug font-medium">{p.title}</h3>
         <p className="mt-1 text-sm">
-          <span className="font-bold">{formatPrice(p.price)}</span>
+          {p.price != null ? <span className="font-bold">{formatPrice(p.price)}</span> : <span className="text-muted">Price on site</span>}
           {onSale && <span className="ml-2 text-xs text-muted line-through">{formatPrice(p.compare_at_price)}</span>}
         </p>
       </a>

@@ -15,6 +15,9 @@ class ProductData:
     tags: list[str] = field(default_factory=list)
     available: bool = True
     currency: str | None = None
+    # True when only title/photo/link are known (e.g. from a sitemap): saving such a row
+    # must not overwrite price, stock or type that an earlier catalogue sync stored.
+    partial: bool = False
 
 
 def to_decimal(value) -> Decimal | None:

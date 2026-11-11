@@ -220,6 +220,9 @@ function StoreCard({ store: s, act }: { store: AdminStore; act: (fn: () => Promi
               : `Reading the catalogue: ${job.found.toLocaleString()} products found`}
         </p>
       )}
+      {job?.status === "done" && job.error && (
+        <p className="mt-4 rounded-xl bg-sand px-4 py-2.5 text-sm text-ink-soft">{job.error}</p>
+      )}
       {job?.status === "failed" && (
         <p className="mt-4 rounded-xl bg-accent-soft px-4 py-2.5 text-sm text-accent-dark">Last sync failed: {job.error}</p>
       )}
