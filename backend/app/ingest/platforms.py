@@ -106,6 +106,13 @@ async def detect_platform(client: httpx.AsyncClient, base: str) -> str:
 _NOT_PHOTOS = (".svg", ".gif")
 
 
+def _skip(info: dict | None, reason: str) -> None:
+    """Count a product the importer couldn't use, so Admin can say why totals differ."""
+    if info is not None:
+        skipped = info.setdefault("skipped", {})
+        skipped[reason] = skipped.get(reason, 0) + 1
+
+
 def _first_photo(srcs: list[str]) -> str | None:
     for src in srcs:
         if src and not urlsplit(src).path.lower().endswith(_NOT_PHOTOS):
@@ -144,7 +151,7 @@ async def _fetch_text(client: httpx.AsyncClient, url: str, attempts: int = 4) ->
     raise StoreUnavailable(f"The store kept refusing requests ({last}). It may be rate-limiting us, so try again later")
 
 
-async def read_shopify_sitemap(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
+async def read_shopify_sitemap(client: httpx.AsyncClient, base: str, info: dict | None = None) -> AsyncIterator[list[ProductData]]:
     """Every Shopify store publishes product sitemaps (sitemap_products_N.xml) listing each
     product's link, title and main photo: a handful of requests for the whole catalogue,
     and rarely rate-limited. They carry no price or stock, so rows are marked partial."""
@@ -164,7 +171,10 @@ async def read_shopify_sitemap(client: httpx.AsyncClient, base: str) -> AsyncIte
             images = [t.get_text(strip=True) for t in url.find_all("loc") if t.prefix == "image"]
             titles = [t.get_text(strip=True) for t in url.find_all("title") if t.prefix == "image"]
             image = _first_photo(images)
-            if not handle or not image:
+            if not handle:
+                continue  # the shop's home page or a non-product link
+            if not image:
+                _skip(info, "no usable photo (none, or only an SVG/GIF)")
                 continue
             batch.append(ProductData(
                 external_id=f"{SITEMAP_ID_PREFIX}{handle}"[:200],
@@ -181,17 +191,17 @@ async def read_shopify(client: httpx.AsyncClient, base: str, info: dict | None =
     """The full catalogue (prices, stock, tags) from /products.json; if the store keeps
     refusing it, the product sitemap still gets every product in, without prices."""
     try:
-        async for batch in _read_shopify_catalogue(client, base):
+        async for batch in _read_shopify_catalogue(client, base, info):
             yield batch
     except StoreUnavailable as e:
         print(f"[IMPORT] {base}: catalogue unavailable ({e}); falling back to the product sitemap")
         if info is not None:
             info["fallback"] = "sitemap"
-        async for batch in read_shopify_sitemap(client, base):
+        async for batch in read_shopify_sitemap(client, base, info):
             yield batch
 
 
-async def _read_shopify_catalogue(client: httpx.AsyncClient, base: str) -> AsyncIterator[list[ProductData]]:
+async def _read_shopify_catalogue(client: httpx.AsyncClient, base: str, info: dict | None = None) -> AsyncIterator[list[ProductData]]:
     page = 1
     while True:
         data = await _json_page(client, f"{base}/products.json", limit=250, page=page)
@@ -202,6 +212,7 @@ async def _read_shopify_catalogue(client: httpx.AsyncClient, base: str) -> Async
         for p in items:
             image = _first_photo([i.get("src", "") for i in p.get("images") or []])
             if not image:
+                _skip(info, "no usable photo (none, or only an SVG/GIF)")
                 continue
             variants = p.get("variants") or [{}]
             prices = [to_decimal(v.get("price")) for v in variants]
@@ -240,6 +251,7 @@ async def read_woocommerce(client: httpx.AsyncClient, base: str, info: dict | No
         for p in items:
             image = _first_photo([i.get("src", "") for i in p.get("images") or []])
             if not image:
+                _skip(info, "no usable photo (none, or only an SVG/GIF)")
                 continue
             prices = p.get("prices") or {}
             unit = 10 ** int(prices.get("currency_minor_unit") or 0)

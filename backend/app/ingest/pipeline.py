@@ -183,8 +183,13 @@ async def run_job(job_id: int) -> None:
             await s.execute(update(Store).where(Store.id == store.id).values(product_count=count, last_synced_at=datetime.now(timezone.utc)))
             await s.commit()
         # A completed job can still carry a note (shown in Admin), e.g. a sitemap fallback.
-        note = ("Imported from the store's sitemap because its catalogue was rate-limited. "
-                "Prices and stock will fill in on a later sync.") if info.get("fallback") == "sitemap" else None
+        notes = []
+        if info.get("fallback") == "sitemap":
+            notes.append("Imported from the store's sitemap because its catalogue was rate-limited. "
+                         "Prices and stock will fill in on a later sync.")
+        for reason, n in (info.get("skipped") or {}).items():
+            notes.append(f"Skipped {n} {'product' if n == 1 else 'products'}: {reason}.")
+        note = " ".join(notes) or None
         await _update_job(job_id, status="done", stage=None, error=note, finished_at=datetime.now(timezone.utc))
         print(f"[IMPORT] {store.name}: done — {count} searchable products")
     except Exception as e:
