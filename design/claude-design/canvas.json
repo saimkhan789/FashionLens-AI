@@ -87,6 +87,30 @@
       "h": 1180,
       "title": "4 · Minimal Yet Warm (Gusto palette)",
       "expand": "fill"
+    },
+    "CombinedHomeLive.dc.html": {
+      "x": 0,
+      "y": 6600,
+      "w": 1280,
+      "h": 1180,
+      "title": "Combined 1: Home with the live, shuffling photo collage",
+      "expand": "fill"
+    },
+    "CombinedHomeStatic.dc.html": {
+      "x": 1360,
+      "y": 6600,
+      "w": 1280,
+      "h": 1180,
+      "title": "Combined 2: Home with the floating photo collage (your layout)",
+      "expand": "fill"
+    },
+    "CombinedResults.dc.html": {
+      "x": 2720,
+      "y": 6600,
+      "w": 1280,
+      "h": 1180,
+      "title": "Combined: Photo search results (both versions)",
+      "expand": "fill"
     }
   },
   "createdOnFiles": {
@@ -128,6 +152,13 @@
       "text": "Palettes from the Visme article, one design each",
       "x": 0,
       "y": 4600
+    },
+    "titleCombined": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Combined: Clean and Modern, Mobile palette, your picks",
+      "x": 0,
+      "y": 6300
     }
   },
   "order": [
@@ -141,7 +172,10 @@
     "VismeHaus.dc.html",
     "VismeDetails.dc.html",
     "VismeUmwelt.dc.html",
-    "VismeGusto.dc.html"
+    "VismeGusto.dc.html",
+    "CombinedHomeLive.dc.html",
+    "CombinedHomeStatic.dc.html",
+    "CombinedResults.dc.html"
   ],
   "pages": [],
   "title": "FashionLens Design Directions"

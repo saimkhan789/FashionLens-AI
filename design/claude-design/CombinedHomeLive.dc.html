@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FashionLens Combined: Home, live collage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1a1a1a;text-decoration:none}a:hover{color:#a8401e}
+@keyframes fl-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fl-fade{from{opacity:0.35}to{opacity:1}}
+.fl-tile:hover{transform:translateY(-6px) !important}
+@media (prefers-reduced-motion: reduce){.fl-tile{animation:none !important}}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #fafaf8; color: #1a1a1a; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; line-height: 1.6">
+
+  <header style="position: sticky; top: 0; z-index: 10; background: rgba(250,250,248,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid #ece9e3">
+    <nav style="max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+      <a href="#" style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; letter-spacing: -0.01em">fashionlens<span style="color: #c8502a">.</span></a>
+      <div style="display: flex; gap: 30px; font-size: 14px; font-weight: 500; flex-wrap: wrap">
+        <a href="#" style="border-bottom: 2px solid #c8502a; padding-bottom: 3px">Search</a>
+        <a href="#" style="color: #4a4a45">Saved</a>
+        <a href="#" style="color: #4a4a45">History</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <a href="#" style="padding: 10px 16px; font-size: 14px; font-weight: 500">Sign in</a>
+        <a href="#" style="padding: 10px 22px; border-radius: 999px; background: #c8502a; color: #ffffff; font-size: 14px; font-weight: 600; box-shadow: 0 12px 26px -10px rgba(200,80,42,0.7)">Join free</a>
+      </div>
+    </nav>
+  </header>
+
+  <section style="background: linear-gradient(180deg, #f3ece4 0%, #fafaf8 100%)">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 56px 32px 60px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+      <div style="flex: 1 1 500px; min-width: 0">
+        <span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 8px; border-radius: 999px; background: #ffffff; box-shadow: 0 6px 18px -10px rgba(26,26,26,0.4); font-size: 13px; font-weight: 600">
+          <span style="padding: 2px 8px; border-radius: 999px; background: #fdf0ec; color: #a8401e; font-size: 11px; font-weight: 700">NEW</span>
+          Search by photo, piece by piece
+        </span>
+        <h1 style="margin: 18px 0 12px; font-family: 'Cormorant Garamond', serif; font-size: 76px; line-height: 0.98; font-weight: 500; letter-spacing: -0.01em">Every piece,<br><span style="font-style: italic; color: #c8502a">found.</span></h1>
+        <p style="margin: 0 0 26px; max-width: 470px; font-size: 17px; color: #4a4a45">Show us an outfit from Pinterest or your gallery. We pick out each garment and find where to buy it from Pakistani brands.</p>
+
+        <div style="padding: 22px; border-radius: 26px; background: linear-gradient(160deg, #eee5da 0%, #e2d5c6 100%); box-shadow: 0 36px 70px -36px rgba(26,26,26,0.45)">
+          <div style="padding: 24px 20px; border: 2px dashed #b3a99c; border-radius: 18px; background: rgba(250,250,248,0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); text-align: center">
+            <span style="display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #c8502a; box-shadow: 0 16px 28px -12px rgba(200,80,42,0.8)">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+            </span>
+            <p style="margin: 12px 0 2px; font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600">Drop a photo here</p>
+            <p style="margin: 0; font-size: 13px; color: #4a4a45">or <a href="#" style="font-weight: 700; text-decoration: underline; text-underline-offset: 3px">choose from your gallery</a>, or paste a screenshot</p>
+          </div>
+          <form style="margin-top: 14px; display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 6px 0 18px; border-radius: 999px; background: #ffffff; box-shadow: 0 12px 26px -16px rgba(26,26,26,0.45)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#6b6b64" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            <label for="q-cl" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Search</label>
+            <input id="q-cl" placeholder="Or describe it: mustard lawn suit under 6k" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: #1a1a1a">
+            <button type="button" style="height: 44px; padding: 0 22px; border: 0; border-radius: 999px; background: #1a1a1a; color: #ffffff; font: inherit; font-weight: 700; cursor: pointer">Search</button>
+          </form>
+        </div>
+        <p style="margin: 12px 0 0; font-size: 13px; color: #6b6b64">3 free searches and 1 photo search, then sign in free.</p>
+      </div>
+
+      <div style="flex: 1 1 400px; min-width: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 230px 230px; gap: 14px">
+        <sc-for list="{{tiles}}" as="t" hint-placeholder-count="5">
+          <div class="fl-tile" style="grid-row: {{t.span}}; position: relative; overflow: hidden; border-radius: 16px; background: #ece4da; box-shadow: 0 22px 40px -22px rgba(26,26,26,0.5); animation: fl-float {{t.dur}} ease-in-out infinite; animation-delay: {{t.delay}}">
+            <img src="{{t.img}}" alt="Outfit inspiration" style="width: 100%; height: 100%; object-fit: cover; display: block; animation: fl-fade 0.8s ease">
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: 36px 32px 72px">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap">
+      <h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 600">Trending this week</h2>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #1a1a1a; color: #ffffff; font-size: 13px; font-weight: 600">All</a>
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #f1ede6; font-size: 13px; font-weight: 600">Kurtas</a>
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #f1ede6; font-size: 13px; font-weight: 600">Lawn</a>
+        <a href="#" style="padding: 8px 16px; border-radius: 999px; background: #f1ede6; font-size: 13px; font-weight: 600">Formals</a>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 26px 20px">
+      <sc-for list="{{products}}" as="p" hint-placeholder-count="4">
+        <article style="position: relative">
+          <div style="aspect-ratio: 4 / 5; overflow: hidden; border-radius: 20px; background: #ece4da; box-shadow: 0 24px 40px -26px rgba(26,26,26,0.55)"><img src="{{p.img}}" alt="[Product name]" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+          <button type="button" aria-label="Save" style="position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border: 0; border-radius: 999px; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: grid; place-items: center; cursor: pointer">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"></path></svg>
+          </button>
+          <p style="margin: 12px 0 0; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #a8401e">{{p.brand}}</p>
+          <p style="margin: 2px 0 0; font-weight: 500">[Product name]</p>
+          <p style="margin: 2px 0 0; font-weight: 700">Rs [price]</p>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { shift: 0 };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => this.setState((s) => ({ shift: (s.shift + 1) % 6 })), 2800);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+  renderVals() {
+    const photos = [
+      '/_blob/0c6f20460c789030764307845e1aec35', '/_blob/fe7db5e69ad7000c3a6228af7de971eb',
+      '/_blob/649601e28f8198bb0f6c1e24c142c84f', '/_blob/22ff8c42e2889979ae549297e764b716',
+      '/_blob/ec59c4e78eeab4998e32ba0f417bfe3e', '/_blob/6205777a9a7d735aecbcbf28c9b59a79'
+    ];
+    const shift = this.state.shift;
+    // Five tiles show five of the six photos; every few seconds they all move one place.
+    const tiles = [0, 1, 2, 3, 4].map((i) => ({
+      img: photos[(i + shift) % photos.length],
+      span: i === 0 ? 'span 2' : 'span 1',
+      dur: (3 + i * 0.4).toFixed(1) + 's',
+      delay: (i * 0.3).toFixed(1) + 's'
+    }));
+    const products = [5, 4, 0, 1].map((n, i) => ({ img: photos[n], brand: i === 0 ? 'Limelight' : '[Brand]' }));
+    return { tiles, products };
+  }
+}
+</script>
+</body>
+</html>

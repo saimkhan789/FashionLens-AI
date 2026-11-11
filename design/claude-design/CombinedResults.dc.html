@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FashionLens Combined: Photo search results</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1a1a1a;text-decoration:none}a:hover{color:#a8401e}
+input[type=checkbox],input[type=radio]{accent-color:#c8502a;width:16px;height:16px}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #fafaf8; color: #1a1a1a; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; line-height: 1.55">
+
+  <header style="position: sticky; top: 0; z-index: 10; background: rgba(250,250,248,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid #ece9e3">
+    <nav style="max-width: 1280px; margin: 0 auto; padding: 0 32px; height: 70px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap">
+      <a href="#" style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; letter-spacing: -0.01em">fashionlens<span style="color: #c8502a">.</span></a>
+      <form style="flex: 1 1 360px; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 5px 0 16px; border-radius: 999px; background: #ffffff; border: 1px solid #e6e1d9; box-shadow: 0 10px 24px -16px rgba(26,26,26,0.4)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#6b6b64" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <label for="q-cr" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Search</label>
+        <input id="q-cr" placeholder="Search again, or drop another photo" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 14px">
+        <button type="button" aria-label="Search with a photo" style="width: 44px; height: 36px; border: 0; border-radius: 999px; background: #c8502a; display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 16px -8px rgba(200,80,42,0.8)">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h1.6l1.4-2h7l1.4 2h1.6A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+        </button>
+      </form>
+      <div style="display: flex; align-items: center; gap: 24px; font-size: 14px; font-weight: 500">
+        <a href="#" style="color: #4a4a45">Saved</a>
+        <a href="#" style="color: #4a4a45">History</a>
+        <a href="#" style="width: 36px; height: 36px; border-radius: 999px; background: #fdf0ec; color: #a8401e; display: grid; place-items: center; font-weight: 700; font-size: 14px">S</a>
+      </div>
+    </nav>
+  </header>
+
+  <div style="border-bottom: 1px solid #ece9e3; background: linear-gradient(180deg, #f3ece4, #f7f3ee)">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 18px 32px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap">
+      <div style="position: relative; width: 84px; height: 112px; border-radius: 12px; overflow: hidden; flex-shrink: 0; box-shadow: 0 14px 26px -14px rgba(26,26,26,0.55)">
+        <img src="/_blob/0c6f20460c789030764307845e1aec35" alt="Your photo" style="width: 100%; height: 100%; object-fit: cover; display: block">
+        <div style="position: absolute; left: 18%; top: 20%; width: 64%; height: 40%; border: 2px solid #c8502a; border-radius: 5px; box-shadow: 0 0 0 999px rgba(26,26,26,0.12)"></div>
+      </div>
+      <div style="min-width: 0">
+        <p style="margin: 0 0 8px; font-size: 13px; color: #4a4a45">We found <strong>3 pieces</strong> in your photo. Pick one to see matches.</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap">
+          <button type="button" style="padding: 7px 14px; border: 0; border-radius: 999px; background: #c8502a; color: #ffffff; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 18px -8px rgba(200,80,42,0.8)">Kurta · 24</button>
+          <button type="button" style="padding: 7px 14px; border: 1px solid #ddd6cc; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer">Trousers · 18</button>
+          <button type="button" style="padding: 7px 14px; border: 1px solid #ddd6cc; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer">Dupatta · 11</button>
+          <button type="button" style="padding: 7px 14px; border: 1px solid #ddd6cc; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer">Full look</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main style="max-width: 1280px; margin: 0 auto; padding: 26px 32px 64px; display: flex; flex-wrap: wrap; gap: 32px">
+    <aside style="flex: 1 1 210px; max-width: 230px; min-width: 0; align-self: flex-start; padding: 20px; border-radius: 18px; background: #ffffff; border: 1px solid #efebe4; box-shadow: 0 18px 36px -26px rgba(26,26,26,0.4); font-size: 14px">
+      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6b64">Brand</p>
+      <label style="display: flex; align-items: center; gap: 9px; padding: 4px 0"><input type="checkbox" checked> Limelight</label>
+      <label style="display: flex; align-items: center; gap: 9px; padding: 4px 0"><input type="checkbox"> [Brand]</label>
+      <label style="display: flex; align-items: center; gap: 9px; padding: 4px 0"><input type="checkbox"> [Brand]</label>
+
+      <p style="margin: 20px 0 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6b64">For</p>
+      <label style="display: flex; align-items: center; gap: 9px; padding: 4px 0"><input type="radio" name="g-cr" checked> Women</label>
+      <label style="display: flex; align-items: center; gap: 9px; padding: 4px 0"><input type="radio" name="g-cr"> Men</label>
+      <label style="display: flex; align-items: center; gap: 9px; padding: 4px 0"><input type="radio" name="g-cr"> Kids</label>
+
+      <p style="margin: 20px 0 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6b64">Price (Rs)</p>
+      <div style="display: flex; gap: 8px">
+        <label for="min-cr" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Minimum price</label>
+        <input id="min-cr" placeholder="Min" style="width: 100%; min-width: 0; height: 38px; padding: 0 10px; border: 1px solid #e0dad1; border-radius: 10px; background: #fafaf8; font: inherit; font-size: 13px">
+        <label for="max-cr" style="position: absolute; width: 1px; height: 1px; overflow: hidden">Maximum price</label>
+        <input id="max-cr" placeholder="Max" style="width: 100%; min-width: 0; height: 38px; padding: 0 10px; border: 1px solid #e0dad1; border-radius: 10px; background: #fafaf8; font: inherit; font-size: 13px">
+      </div>
+      <button type="button" style="margin-top: 18px; padding: 0; border: 0; background: transparent; font: inherit; font-size: 13px; font-weight: 600; color: #a8401e; cursor: pointer">Clear filters</button>
+    </aside>
+
+    <section style="flex: 999 1 560px; min-width: 0">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap">
+        <h1 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-size: 36px; line-height: 1.1; font-weight: 600">Matches for the <span style="font-style: italic; color: #c8502a">kurta</span></h1>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4a4a45">Sort
+          <select style="height: 38px; padding: 0 10px; border: 1px solid #e0dad1; border-radius: 999px; background: #ffffff; font: inherit; font-size: 13px">
+            <option>Best match</option><option>Price: low to high</option><option>Price: high to low</option>
+          </select>
+        </label>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 26px 18px">
+        <sc-for list="{{products}}" as="p" hint-placeholder-count="8">
+          <article style="position: relative">
+            <a href="#" style="display: block">
+              <div style="aspect-ratio: 3 / 4; overflow: hidden; border-radius: 16px; background: #ece4da; box-shadow: 0 20px 36px -24px rgba(26,26,26,0.55)"><img src="{{p.img}}" alt="[Product name from the brand]" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+              <p style="margin: 10px 0 0; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #a8401e">{{p.brand}}</p>
+              <h3 style="margin: 1px 0 0; font-size: 14px; font-weight: 500; line-height: 1.35">[Product name from the brand]</h3>
+              <p style="margin: 3px 0 0; font-size: 14px; font-weight: 700">Rs [price]</p>
+            </a>
+            <button type="button" aria-label="Save" style="position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 999px; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: grid; place-items: center; cursor: pointer">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1a1a1a" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"></path></svg>
+            </button>
+            <a href="#" style="display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; font-size: 12px; font-weight: 600; color: #4a4a45">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2.5 2.5m7 7L18 18M6 18l2.5-2.5m7-7L18 6"></path></svg>Similar</a>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const photos = [
+      '/_blob/ec59c4e78eeab4998e32ba0f417bfe3e', '/_blob/6205777a9a7d735aecbcbf28c9b59a79',
+      '/_blob/22ff8c42e2889979ae549297e764b716', '/_blob/0c6f20460c789030764307845e1aec35',
+      '/_blob/649601e28f8198bb0f6c1e24c142c84f', '/_blob/fe7db5e69ad7000c3a6228af7de971eb',
+      '/_blob/6205777a9a7d735aecbcbf28c9b59a79', '/_blob/ec59c4e78eeab4998e32ba0f417bfe3e'
+    ];
+    return { products: photos.map((img, i) => ({ img, brand: i % 3 === 0 ? 'Limelight' : '[Brand]' })) };
+  }
+}
+</script>
+</body>
+</html>
